@@ -30,6 +30,6 @@ module "gke" {
   cluster_name                       = "test-gke"
   project_id                         = var.gcp_project_id
   region                             = var.gcp_region
-  service_account                    = "prashantyadav@clouddrove.iam.gserviceaccount.com"
+  service_account                    = ""
 
 }
