@@ -48,11 +48,11 @@ variable "location" {
 }
 
 variable "vpc_id" {
-  type = string
+  type    = string
   default = ""
 }
 
 variable "subnet_id" {
-  type = string
+  type    = string
   default = ""
 }

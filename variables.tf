@@ -1,253 +1,83 @@
 variable "environment" {
-  type    = string
-  default = ""
+  type        = string
+  default     = ""
+  description = "Environment (e.g. `prod`, `dev`, `staging`)."
 }
 
 variable "label_order" {
-  type    = list(any)
-  default = []
-}
-
-variable "project" {
-  description = "The project ID to host the cluster in"
-  type        = string
-}
-
-variable "location" {
-  description = "The location (region or zone) to host the cluster in"
-  type        = string
+  type        = list(any)
+  default     = []
+  description = "Label order, e.g. sequence of application name and environment `name`,`environment`,'attribute' [`webserver`,`qa`,`devops`,`public`,] ."
 }
 
 variable "name" {
-  description = "The name of the cluster"
   type        = string
+  default     = ""
+  description = "Name of the resource. Provided by the client when the resource is created. "
 }
 
-variable "network" {
-  type = string
+variable "module_enabled" {
+  type        = bool
+  default     = true
+  description = "Flag to control the service_account_enabled creation."
 }
 
-variable "subnetwork" {
-  type    = string
-  default = ""
+variable "google_container_cluster_enabled" {
+  type        = bool
+  default     = true
+  description = "Flag to control the cluster_enabled creation."
 }
 
-variable "cluster_secondary_range_name" {
-  type    = string
-  default = ""
-}
-
-variable "description" {
-  type    = string
-  default = ""
-}
-
-variable "kubernetes_version" {
-  type    = string
-  default = "latest"
-}
-
-variable "logging_service" {
-  type    = string
-  default = "logging.googleapis.com/kubernetes"
-}
-
-variable "monitoring_service" {
-  type    = string
-  default = "monitoring.googleapis.com/kubernetes"
-}
-
-variable "horizontal_pod_autoscaling" {
-  type    = bool
-  default = true
-}
-
-variable "http_load_balancing" {
-  type    = bool
-  default = true
-}
-
-variable "enable_private_nodes" {
-  type    = bool
-  default = true
-}
-
-variable "disable_public_endpoint" {
-  type    = bool
-  default = false
-}
-
-variable "master_ipv4_cidr_block" {
-  type    = string
-  default = ""
-}
-
-variable "network_project" {
-  type    = string
-  default = ""
-}
-
-variable "master_authorized_networks_config" {
-  description = <<EOF
-  The desired configuration options for master authorized networks. Omit the nested cidr_blocks attribute to disallow external access (except the cluster node IPs, which GKE automatically whitelists)
-  ### example format ###
-  master_authorized_networks_config = [{
-    cidr_blocks = [{
-      cidr_block   = "10.0.0.0/8"
-      display_name = "example_network"
-    }],
-  }]
-EOF
-  type        = list(any)
-  default     = []
-}
-
-variable "maintenance_start_time" {
-  type    = string
-  default = "00:00"
-}
-
-variable "stub_domains" {
-  type    = map(string)
-  default = {}
-}
-
-variable "non_masquerade_cidrs" {
-  type    = list(string)
-  default = ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
-}
-
-variable "ip_masq_resync_interval" {
-  type    = string
-  default = "60s"
-}
-
-variable "ip_masq_link_local" {
-  type    = bool
-  default = false
-}
-
-variable "alternative_default_service_account" {
-  type    = string
-  default = null
-}
-
-variable "resource_labels" {
-  type    = map(any)
-  default = {}
-}
-
-variable "enable_legacy_abac" {
-  type    = bool
-  default = false
-}
-
-variable "enable_network_policy" {
-  type    = bool
-  default = true
-}
-
-variable "basic_auth_username" {
-  type    = string
-  default = ""
-}
-
-variable "basic_auth_password" {
-  type    = string
-  default = ""
-}
-
-variable "enable_client_certificate_authentication" {
-  type    = bool
-  default = false
-}
-
-variable "gsuite_domain_name" {
-  type    = string
-  default = null
-}
-
-variable "secrets_encryption_kms_key" {
-  type    = string
-  default = null
-}
-
-variable "enable_vertical_pod_autoscaling" {
-  type    = string
-  default = false
-}
-
-variable "services_secondary_range_name" {
-  type    = string
-  default = null
-}
-
-variable "env_label" {
-  type    = string
-  default = "dev"
-}
-
-variable "enable_workload_identity" {
-  default = false
-  type    = bool
-}
-
-variable "service_account_roles" {
-  type    = list(string)
-  default = []
-}
-
-variable "workload_identity_config" {
-  type    = list(any)
-  default = []
-
-}
-
-variable "authenticator_groups_config" {
-  type    = string
-  default = ""
-}
-
-variable "identity_namespace" {
-  type    = string
-  default = ""
-
-}
-
-variable "gcp_project_id" {
+variable "location" {
   type        = string
-  default     = "clouddrove"
-  description = "Google Cloud project ID"
+  default     = ""
+  description = "The location (region or zone) in which the cluster master will be created, as well as the default node location."
 }
 
-variable "gcp_region" {
-  type        = string
-  default     = "europe-west3"
-  description = "Google Cloud region"
+variable "remove_default_node_pool" {
+  type        = bool
+  default     = true
+  description = "deletes the default node pool upon cluster creation."
 }
-
-
-variable "cluster_name" {
-  type    = string
-  default = "dev-gke"
-}
-
-variable "node_name" {
-  type    = string
-  default = ""
-}
-
-
-variable "cluster" {
-  type    = string
-  default = ""
-}
-
 
 variable "initial_node_count" {
-  type    = number
-  default = 1
+  type        = number
+  default     = 1
+  description = "The number of nodes to create in this cluster's default node pool."
 }
+
+variable "google_container_node_pool_enabled" {
+  type        = bool
+  default     = true
+  description = "Flag to control the cluster_enabled creation."
+}
+
+variable "node_count" {
+  type        = number
+  default     = 1
+  description = "The number of nodes to create in this cluster's default node pool."
+}
+
+variable "service_account" {
+  type        = string
+  default     = ""
+  description = "The Google Cloud Platform Service Account to be used by the node VMs created by GKE Autopilot or NAP."
+}
+
+variable "project" {
+  type        = string
+  default     = ""
+  description = "The project ID to host the cluster in"
+
+}
+
+variable "cluster" {
+  type        = string
+  default     = ""
+  description = "The cluster to create the node pool for."
+
+}
+
 ######################### Autoscaling ###########################
 variable "min_node_count" {
   type    = number
@@ -272,7 +102,7 @@ variable "auto_repair" {
 
 variable "auto_upgrade" {
   type    = bool
-  default = false
+  default = true
 }
 
 ######################### node_config ###########################
@@ -317,62 +147,25 @@ variable "cluster_delete_timeouts" {
   default = "30m"
 }
 
-
-variable "node_pool" {
-  type    = any
-  default = {}
-}
-
 variable "kubectl_config_path" {
   description = "Path to the kubectl config file. Defaults to $HOME/.kube/config"
   type        = string
   default     = ""
 }
 
-variable "max_unavailable" {
-  type    = number
-  default = 0
+variable "cluster_name" {
+  type    = string
+  default = ""
 }
 
-variable "max_surge" {
-  type    = number
-  default = 0
-}
-
-variable "gce_ssh_user" {
-  type = string
+variable "project_id" {
+  type        = string
   default     = ""
-  description = "- (Optional) ssh user"
+  description = "Google Cloud project ID"
 }
 
-variable "gce_ssh_pub_key" {
-  type = string
+variable "region" {
+  type        = string
   default     = ""
-  description = "- (Optional) ssh pub key file"
-
-}
-
-variable "release_channel" {
-  type = string
-  default     = "UNSPECIFIED"
-  description = "(Optional) Configuration options for the Release channel feature, which provide more control over automatic upgrades of your GKE clusters."
-
-}
-
-variable "oauth_scopes" {
-  type    = list(string)
-  default = []
-  description = "(Optional) Scopes that are used by NAP when creating node pools."
-}
-
-variable "node_pools" {
-  type        = any
-  default     = {}
-  description = "Map of node pools definitions to create"
-}
-
-variable "module_enabled" {
-  type        = bool
-  description = "(Optional) Whether or not to create resources within the module."
-  default     = true
+  description = "Google Cloud region"
 }
