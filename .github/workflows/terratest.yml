@@ -2,7 +2,7 @@ name: 'Terratest GitHub Actions'
 on:
   pull_request:
     branches:
-      - devops
+      - master
     types: [labeled]
 
 jobs:
