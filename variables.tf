@@ -169,3 +169,22 @@ variable "region" {
   default     = ""
   description = "Google Cloud region"
 }
+variable "network" {
+  type        = string
+  default     = ""
+  description = "A reference (self link) to the VPC network to host the cluster in"
+
+}
+
+variable "subnetwork" {
+  type        = string
+  default     = ""
+  description = "A reference (self link) to the subnetwork to host the cluster in"
+
+}
+variable "gke_version" {
+  type        = string
+  default     = ""
+  description = "The minimum version of the master. "
+
+}

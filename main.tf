@@ -10,12 +10,14 @@ module "labels" {
 resource "google_container_cluster" "primary" {
   count = var.google_container_cluster_enabled && var.module_enabled ? 1 : 0
 
-
   name     = module.labels.id
   location = var.location
 
+  network                  = var.network
+  subnetwork               = var.subnetwork
   remove_default_node_pool = var.remove_default_node_pool
   initial_node_count       = var.initial_node_count
+  min_master_version       = var.gke_version
 }
 
 resource "google_container_node_pool" "node_pool" {
@@ -38,27 +40,18 @@ resource "google_container_node_pool" "node_pool" {
     auto_upgrade = var.auto_upgrade
   }
 
-
   node_config {
-    image_type   = var.image_type
-    machine_type = var.machine_type
-
+    image_type      = var.image_type
+    machine_type    = var.machine_type
     service_account = var.service_account
-
-
-
-
-    disk_size_gb = var.disk_size_gb
-    disk_type    = var.disk_type
-    preemptible  = var.preemptible
-
-
+    disk_size_gb    = var.disk_size_gb
+    disk_type       = var.disk_type
+    preemptible     = var.preemptible
   }
 
   lifecycle {
     ignore_changes        = [initial_node_count]
     create_before_destroy = false
-
   }
 
   timeouts {
@@ -76,8 +69,5 @@ resource "null_resource" "configure_kubectl" {
       KUBECONFIG = var.kubectl_config_path != "" ? var.kubectl_config_path : ""
     }
   }
-
   depends_on = [google_container_node_pool.node_pool]
 }
-
-
