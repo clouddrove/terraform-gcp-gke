@@ -116,6 +116,7 @@ service_account                    = ""
 | disk\_size\_gb | n/a | `number` | `50` | no |
 | disk\_type | n/a | `string` | `""` | no |
 | environment | Environment (e.g. `prod`, `dev`, `staging`). | `string` | `""` | no |
+| gke\_version | The minimum version of the master. | `string` | `""` | no |
 | google\_container\_cluster\_enabled | Flag to control the cluster\_enabled creation. | `bool` | `true` | no |
 | google\_container\_node\_pool\_enabled | Flag to control the cluster\_enabled creation. | `bool` | `true` | no |
 | image\_type | ######################## node\_config ########################### | `string` | `""` | no |
@@ -129,6 +130,7 @@ service_account                    = ""
 | min\_node\_count | ######################## Autoscaling ########################### | `number` | `2` | no |
 | module\_enabled | Flag to control the service\_account\_enabled creation. | `bool` | `true` | no |
 | name | Name of the resource. Provided by the client when the resource is created. | `string` | `""` | no |
+| network | A reference (self link) to the VPC network to host the cluster in | `string` | `""` | no |
 | node\_count | The number of nodes to create in this cluster's default node pool. | `number` | `1` | no |
 | preemptible | n/a | `bool` | `false` | no |
 | project | The project ID to host the cluster in | `string` | `""` | no |
@@ -136,6 +138,7 @@ service_account                    = ""
 | region | Google Cloud region | `string` | `""` | no |
 | remove\_default\_node\_pool | deletes the default node pool upon cluster creation. | `bool` | `true` | no |
 | service\_account | The Google Cloud Platform Service Account to be used by the node VMs created by GKE Autopilot or NAP. | `string` | `""` | no |
+| subnetwork | A reference (self link) to the subnetwork to host the cluster in | `string` | `""` | no |
 
 ## Outputs
 
