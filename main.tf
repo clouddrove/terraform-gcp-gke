@@ -18,6 +18,35 @@ resource "google_container_cluster" "primary" {
   remove_default_node_pool = var.remove_default_node_pool
   initial_node_count       = var.initial_node_count
   min_master_version       = var.gke_version
+  deletion_protection      = var.deletion_protection
+  cluster_ipv4_cidr        = var.cluster_ipv4_cidr
+
+  cluster_autoscaling {
+    enabled = var.cluster_autoscaling
+    autoscaling_profile = var.cluster_autoscaling.autoscaling_profile != null ? var.cluster_autoscaling.autoscaling_profile : "BALANCED"
+  }
+
+  addons_config {
+    http_load_balancing {
+      disabled = !var.http_load_balancing
+    }
+
+    horizontal_pod_autoscaling {
+      disabled = !var.horizontal_pod_autoscaling
+    }
+
+    network_policy_config {
+      disabled = !var.network_policy
+    }
+
+    dns_cache_config {
+      enabled = var.dns_cache
+    }
+
+    gcp_filestore_csi_driver_config {
+      enabled = var.filestore_csi_driver
+    }
+  }
 }
 
 resource "google_container_node_pool" "node_pool" {

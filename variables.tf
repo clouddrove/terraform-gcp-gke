@@ -16,6 +16,12 @@ variable "name" {
   description = "Name of the resource. Provided by the client when the resource is created. "
 }
 
+variable "name" {
+  type        = string
+  default     = ""
+  description = "Name of the resource. Provided by the client when the resource is created. "
+}
+
 variable "module_enabled" {
   type        = bool
   default     = true
@@ -105,6 +111,12 @@ variable "auto_upgrade" {
   default = true
 }
 
+variable "deletion_protection" {
+  type        = bool
+  default     = true
+  description = "Environment (e.g. `prod`, `dev`, `staging`)."
+}
+
 ######################### node_config ###########################
 variable "image_type" {
   type    = string
@@ -186,5 +198,48 @@ variable "gke_version" {
   type        = string
   default     = ""
   description = "The minimum version of the master. "
+}
 
+variable "cluster_ipv4_cidr" {
+  type        = string
+  default     = ""
+  description = "The IP address range of the Kubernetes pods in this cluster in CIDR notation (e.g. 10.96.0.0/14)."
+}
+
+variable "cluster_autoscaling" {
+  type        = bool
+  default     = false
+  description = "Node Auto-Provisioning with Cluster Autoscaler to automatically adjust the size of the cluster"
+}
+
+########## Addons Config ##########
+
+variable "http_load_balancing" {
+  type        = bool
+  default     = true
+  description = "Set it false you if want to enable http load balancing"
+}
+
+variable "horizontal_pod_autoscaling" {
+  type        = bool
+  default     = true
+  description = "Set it false you if want to enable horizontal pod autoscaling"
+}
+
+variable "network_policy" {
+  type        = bool
+  default     = true
+  description = "Set it false you if want to enable network policy"
+}
+
+variable "dns_cache" {
+  type        = bool
+  default     = false
+  description = "Set it true you if want to dns cache"
+}
+
+variable "filestore_csi_driver" {
+  type        = bool
+  default     = false
+  description = "Set it true you if want to enable filestore csi driver"
 }
