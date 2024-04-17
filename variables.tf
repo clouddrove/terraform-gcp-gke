@@ -64,17 +64,12 @@ variable "node_count" {
   description = "The number of nodes to create in this cluster's default node pool."
 }
 
-# variable "managed_node_pool" {
-#   description = "List of node pools"
-#   type = list(object({
-#     name               = string
-#     initial_node_count = number
-#     machine_type       = string
-#     disk_size_gb       = number
-#     disk_type          = string
-#     preemptible        = bool
-#   }))
-# }
+variable "master_authorized_networks_config" {
+  type        = list(object({ cidr_block = string, display_name = string }))
+  description = "List of master authorized networks. If none are provided, disallow external access (except the cluster node IPs, which GKE automatically whitelists)."
+  default     = []
+}
+
 variable "managed_node_pool" {
   type        = any
   default     = {}

@@ -46,6 +46,18 @@ resource "google_container_cluster" "primary" {
       }
     }
   }
+  dynamic "master_authorized_networks_config" {
+    for_each = { for k, v in var.master_authorized_networks_config : k => v if var.enabled }
+    content {
+      dynamic "cidr_blocks" {
+        for_each = master_authorized_networks_config.value.cidr_blocks
+        content {
+          cidr_block   = cidr_blocks.value
+          display_name = cidr_blocks.value
+        }
+      }
+    }
+  }
 }
 
 resource "google_container_node_pool" "node_pool" {
