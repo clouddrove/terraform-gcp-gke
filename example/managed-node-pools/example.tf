@@ -61,20 +61,20 @@ module "gke" {
   environment = var.environment
   label_order = var.label_order
 
-  network                          = module.vpc.vpc_id
-  subnetwork                       = module.subnet.id
-  project_id                       = var.gcp_project_id
-  region                           = var.gcp_region
-  cluster_name                     = "test-gke"
-  location                         = "us-central1"
-  gke_version                      = "1.29.1-gke.1589017"
-  module_enabled                   = true
-  remove_default_node_pool         = true
-  service_account                  = ""
-  deletion_protection              = false
-  cluster_autoscaling              = false
-  http_load_balancing              = false
-  horizontal_pod_autoscaling       = false
+  network                    = module.vpc.vpc_id
+  subnetwork                 = module.subnet.id
+  project_id                 = var.gcp_project_id
+  region                     = var.gcp_region
+  cluster_name               = "test-gke"
+  location                   = "us-central1"
+  gke_version                = "1.29.1-gke.1589017"
+  module_enabled             = true
+  remove_default_node_pool   = true
+  service_account            = ""
+  deletion_protection        = false
+  cluster_autoscaling        = false
+  http_load_balancing        = false
+  horizontal_pod_autoscaling = false
   managed_node_pool = [
     {
       name               = "critical"
