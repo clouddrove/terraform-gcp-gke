@@ -75,12 +75,12 @@ module "gke" {
   cluster_autoscaling        = false
   http_load_balancing        = false
   horizontal_pod_autoscaling = false
-  master_authorized_networks_config {
-     cidr_blocks {
-       cidr_block = "10.10.128.0/24"
-       display_name = "internal"
+  master_authorized_networks = [
+    {
+      cidr_block   = "10.0.0.7/32"
+      display_name = "net1"
     }
-  }
+  ]
   self_node_pools = [
     {
       name               = "critical"
