@@ -8,22 +8,60 @@ module "labels" {
 }
 
 resource "google_container_cluster" "primary" {
-  count = var.google_container_cluster_enabled && var.module_enabled ? 1 : 0
+  count = var.google_container_cluster_enabled ? 1 : 0
 
-  name     = module.labels.id
-  location = var.location
-
+  name                     = module.labels.id
+  location                 = var.location
   network                  = var.network
   subnetwork               = var.subnetwork
   remove_default_node_pool = var.remove_default_node_pool
-  initial_node_count       = var.initial_node_count
   min_master_version       = var.gke_version
+  deletion_protection      = var.deletion_protection
+  cluster_ipv4_cidr        = var.cluster_ipv4_cidr
+  initial_node_count       = var.managed_node_pool == {} ? var.initial_node_count : 0 
+
+  cluster_autoscaling {
+    enabled = var.cluster_autoscaling
+  }
+
+  addons_config {
+    http_load_balancing {
+      disabled = !var.http_load_balancing
+    }
+
+    horizontal_pod_autoscaling {
+      disabled = !var.horizontal_pod_autoscaling
+    }
+  }
+  dynamic "node_pool" {
+    for_each = { for k, v in var.managed_node_pool : k => v if var.enabled }
+    content {
+      name               = node_pool.value.name
+      initial_node_count = node_pool.value.initial_node_count
+      node_config {
+        machine_type = node_pool.value.machine_type
+        disk_size_gb = node_pool.value.disk_size_gb
+        disk_type    = node_pool.value.disk_type
+        preemptible  = node_pool.value.preemptible
+      }
+    }
+  }
+  dynamic "master_authorized_networks_config" {
+    for_each = var.master_authorized_networks
+    content {
+      cidr_blocks {
+        cidr_block   = master_authorized_networks_config.value["cidr_block"]
+        display_name = master_authorized_networks_config.value["display_name"]
+      }
+    }
+  }
 }
 
 resource "google_container_node_pool" "node_pool" {
+  for_each = { for k, v in var.self_node_pools : k => v if var.enabled }
   provider = google-beta
 
-  name               = module.labels.id
+  name               = each.value.name
   project            = var.project_id
   location           = var.location
   cluster            = join("", google_container_cluster.primary.*.id)
@@ -59,6 +97,7 @@ resource "google_container_node_pool" "node_pool" {
     update = var.cluster_update_timeouts
     delete = var.cluster_delete_timeouts
   }
+
 }
 
 resource "null_resource" "configure_kubectl" {
