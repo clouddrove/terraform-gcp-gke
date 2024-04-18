@@ -76,6 +76,7 @@ module "gke" {
   http_load_balancing        = false
   horizontal_pod_autoscaling = false
   network_policy             = true
+  pod_security_policy        = true
   master_authorized_networks = [
     {
       cidr_block   = "10.0.0.7/32"

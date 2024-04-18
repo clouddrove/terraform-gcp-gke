@@ -36,6 +36,9 @@ resource "google_container_cluster" "primary" {
     network_policy_config {
       disabled = !var.network_policy
     }
+    pod_security_policy_config {
+      disabled = !var.pod_security_policy
+    }
   }
   dynamic "node_pool" {
     for_each = { for k, v in var.managed_node_pool : k => v if var.enabled }

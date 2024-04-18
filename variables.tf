@@ -278,6 +278,12 @@ variable "network_policy" {
   description = "Set it false you if want to enable network policy"
 }
 
+variable "pod_security_policy" {
+  type        = bool
+  default     = true
+  description = "PodSecurityPolicy controller for this cluster. If enabled, pods must be valid under a PodSecurityPolicy to be created."
+}
+
 variable "dns_cache" {
   type        = bool
   default     = false
