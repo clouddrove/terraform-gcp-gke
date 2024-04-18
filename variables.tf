@@ -72,6 +72,20 @@ variable "master_authorized_networks" {
   description = "List of master authorized networks"
 }
 
+variable "cluster_network_policy" {
+  type = list(object({
+    cidr_block   = string
+    display_name = string
+  }))
+  description = "List of master authorized networks"
+}
+
+variable "network_policy" {
+  type        = bool
+  description = "Enable network policy addon"
+  default     = false
+}
+
 variable "managed_node_pool" {
   type        = any
   default     = {}

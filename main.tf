@@ -32,6 +32,10 @@ resource "google_container_cluster" "primary" {
     horizontal_pod_autoscaling {
       disabled = !var.horizontal_pod_autoscaling
     }
+
+    network_policy_config {
+      disabled = !var.network_policy
+    }
   }
   dynamic "node_pool" {
     for_each = { for k, v in var.managed_node_pool : k => v if var.enabled }
@@ -53,6 +57,14 @@ resource "google_container_cluster" "primary" {
         cidr_block   = master_authorized_networks_config.value["cidr_block"]
         display_name = master_authorized_networks_config.value["display_name"]
       }
+    }
+  }
+  dynamic "network_policy" {
+    for_each = var.cluster_network_policy
+
+    content {
+      enabled  = network_policy.value.enabled
+      provider = network_policy.value.provider
     }
   }
 }
