@@ -80,12 +80,6 @@ variable "cluster_network_policy" {
   description = "List of master authorized networks"
 }
 
-variable "network_policy" {
-  type        = bool
-  description = "Enable network policy addon"
-  default     = false
-}
-
 variable "managed_node_pool" {
   type        = any
   default     = {}

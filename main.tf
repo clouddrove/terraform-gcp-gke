@@ -18,7 +18,7 @@ resource "google_container_cluster" "primary" {
   min_master_version       = var.gke_version
   deletion_protection      = var.deletion_protection
   cluster_ipv4_cidr        = var.cluster_ipv4_cidr
-  initial_node_count       = var.managed_node_pool == {} ? var.initial_node_count : 0 
+  initial_node_count       = var.managed_node_pool == {} ? var.initial_node_count : 0
 
   cluster_autoscaling {
     enabled = var.cluster_autoscaling
