@@ -59,14 +59,14 @@ resource "google_container_cluster" "primary" {
       }
     }
   }
-  dynamic "network_policy" {
-    for_each = var.cluster_network_policy
+  # dynamic "network_policy" {
+  #   for_each = var.cluster_network_policy
 
-    content {
-      enabled  = network_policy.value.enabled
-      provider = network_policy.value.provider
-    }
-  }
+  #   content {
+  #     enabled  = network_policy.value.enabled
+  #     provider = network_policy.value.provider
+  #   }
+  # }
 }
 
 resource "google_container_node_pool" "node_pool" {
