@@ -23,6 +23,9 @@ resource "google_container_cluster" "primary" {
   cluster_autoscaling {
     enabled = var.cluster_autoscaling
   }
+  pod_security_policy_config {
+    disabled = !var.pod_security_policy
+  }
 
   addons_config {
     http_load_balancing {
@@ -35,9 +38,6 @@ resource "google_container_cluster" "primary" {
 
     network_policy_config {
       disabled = !var.network_policy
-    }
-    pod_security_policy_config {
-      disabled = !var.pod_security_policy
     }
   }
   dynamic "node_pool" {
