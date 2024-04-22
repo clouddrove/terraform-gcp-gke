@@ -23,9 +23,9 @@ resource "google_container_cluster" "primary" {
   cluster_autoscaling {
     enabled = var.cluster_autoscaling
   }
-  pod_security_policy_config {
-    enabled = var.pod_security_policy
-  }
+#  pod_security_policy_config {
+#    enabled = var.pod_security_policy
+# }
 
   addons_config {
     http_load_balancing {
