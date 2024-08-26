@@ -63,6 +63,10 @@ resource "google_container_cluster" "primary" {
         spot         = var.spot
 
         labels = var.labels
+
+      workload_metadata_config {
+        mode = var.workload_metadata_mode
+    }
       }
     }
   }

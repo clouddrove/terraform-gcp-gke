@@ -285,3 +285,8 @@ variable "services_secondary_range_name" {
 
 }
 
+variable "workload_metadata_mode" {
+  description = "The mode for workload metadata configuration."
+  type        = string
+  default     = "GKE_METADATA"
+}
