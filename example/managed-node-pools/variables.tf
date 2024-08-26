@@ -27,9 +27,3 @@ variable "gcp_zone" {
   default     = "Europe-west3-c"
   description = "Google Cloud zone"
 }
-
-variable "location" {
-  description = "The location (region or zone) of the GKE cluster."
-  default     = "europe-west3"
-  type        = string
-}
