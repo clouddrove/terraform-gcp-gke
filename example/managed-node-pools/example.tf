@@ -92,7 +92,6 @@ module "gke" {
   pod_security_policy           = true
   enable_private_endpoint       = false
   enable_private_nodes          = true
-  metadata                      = true
   master_ipv4_cidr_block        = "10.13.0.0/28"
   cluster_secondary_range_name  = "pod-range"
   services_secondary_range_name = "svc-range"

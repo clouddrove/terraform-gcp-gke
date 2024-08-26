@@ -285,9 +285,3 @@ variable "services_secondary_range_name" {
 
 }
 
-variable "metadata" {
-  type = map(string)
-  default = {
-    disable-legacy-endpoints = "true"
-  }
-}
