@@ -267,7 +267,7 @@ variable "master_ipv4_cidr_block" {
 
 variable "labels" {
   description = "A map of labels to apply to the GKE cluster and its resources."
-  type        = map(string)
+  type        = string
   default     = {}
 }
 

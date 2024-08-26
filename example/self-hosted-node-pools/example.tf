@@ -93,7 +93,6 @@ module "gke" {
   master_ipv4_cidr_block        = "10.13.0.0/28"
   cluster_secondary_range_name  = "pod-range"
   services_secondary_range_name = "svc-range"
-  metadata                      = true
   cluster_network_policy = {
     policy1 = {
       enabled  = true
