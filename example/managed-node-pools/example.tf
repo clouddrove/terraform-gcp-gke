@@ -67,7 +67,7 @@ module "gke" {
   region                     = var.gcp_region
   cluster_name               = "test-gke"
   location                   = "us-central1"
-  gke_version                = "1.29.1-gke.1589017"
+  gke_version                = "1.30.2-gke.1587003"
   module_enabled             = true
   remove_default_node_pool   = true
   service_account            = ""
@@ -76,7 +76,12 @@ module "gke" {
   http_load_balancing        = false
   horizontal_pod_autoscaling = false
   network_policy             = true
+  spot                       = false
+  enable_preemptible         = true
   pod_security_policy        = true
+  enable_private_endpoint    = false
+  enable_private_nodes       = true
+  master_ipv4_cidr_block     = "10.13.0.0/28"
   master_authorized_networks = [
     {
       cidr_block   = "10.0.0.7/32"

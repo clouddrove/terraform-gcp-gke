@@ -8,7 +8,9 @@ module "labels" {
 }
 
 resource "google_container_cluster" "primary" {
-  count = var.google_container_cluster_enabled ? 1 : 0
+  count    = var.google_container_cluster_enabled ? 1 : 0
+  provider = google-beta
+  project  = var.project_id
 
   name                     = module.labels.id
   location                 = var.location
@@ -23,9 +25,9 @@ resource "google_container_cluster" "primary" {
   cluster_autoscaling {
     enabled = var.cluster_autoscaling
   }
-#  pod_security_policy_config {
-#    enabled = var.pod_security_policy
-# }
+  pod_security_policy_config {
+    enabled = var.pod_security_policy
+  }
 
   addons_config {
     http_load_balancing {
@@ -49,7 +51,8 @@ resource "google_container_cluster" "primary" {
         machine_type = node_pool.value.machine_type
         disk_size_gb = node_pool.value.disk_size_gb
         disk_type    = node_pool.value.disk_type
-        preemptible  = node_pool.value.preemptible
+        preemptible  = var.enable_preemptible
+        spot         = var.spot
       }
     }
   }
@@ -62,6 +65,13 @@ resource "google_container_cluster" "primary" {
       }
     }
   }
+
+  private_cluster_config {
+    enable_private_endpoint = var.enable_private_endpoint
+    enable_private_nodes    = var.enable_private_nodes
+    master_ipv4_cidr_block  = var.master_ipv4_cidr_block
+  }
+
   # dynamic "network_policy" {
   #   for_each = var.cluster_network_policy
 
@@ -76,11 +86,11 @@ resource "google_container_node_pool" "node_pool" {
   for_each = { for k, v in var.self_node_pools : k => v if var.enabled }
   provider = google-beta
 
-  name               = each.value.name
-  project            = var.project_id
-  location           = var.location
-  cluster            = join("", google_container_cluster.primary.*.id)
-  initial_node_count = var.initial_node_count
+  name       = each.value.name
+  project    = var.project_id
+  location   = var.location
+  cluster    = join("", google_container_cluster.primary.*.id)
+  node_count = var.initial_node_count
 
   autoscaling {
     min_node_count  = var.min_node_count

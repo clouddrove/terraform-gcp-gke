@@ -77,6 +77,10 @@ module "gke" {
   horizontal_pod_autoscaling = false
   network_policy             = true
   pod_security_policy        = true
+  spot                       = true
+  enable_private_endpoint    = false
+  enable_private_nodes       = true
+  master_ipv4_cidr_block     = "10.13.0.0/28"
   master_authorized_networks = [
     {
       cidr_block   = "10.0.0.7/32"

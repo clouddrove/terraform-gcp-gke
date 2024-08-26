@@ -278,11 +278,11 @@ variable "network_policy" {
   description = "Set it false you if want to enable network policy"
 }
 
-# variable "pod_security_policy" {
-#   type        = bool
-#   default     = true
-#   description = "PodSecurityPolicy controller for this cluster. If enabled, pods must be valid under a PodSecurityPolicy to be created."
-# }
+variable "pod_security_policy" {
+  type        = bool
+  default     = true
+  description = "PodSecurityPolicy controller for this cluster. If enabled, pods must be valid under a PodSecurityPolicy to be created."
+}
 
 variable "dns_cache" {
   type        = bool
@@ -295,3 +295,34 @@ variable "filestore_csi_driver" {
   default     = false
   description = "Set it true you if want to enable filestore csi driver"
 }
+
+variable "spot" {
+  description = "Enable or disable spot (preemptible) instances for the node pool"
+  type        = bool
+  default     = false
+}
+
+variable "enable_preemptible" {
+  description = "Enable or disable preemptible nodes"
+  type        = bool
+  default     = false
+}
+
+variable "enable_private_endpoint" {
+  description = "Enable or disable the private endpoint for the GKE cluster"
+  type        = bool
+  default     = false
+}
+
+variable "enable_private_nodes" {
+  description = "Enable or disable private nodes for the GKE cluster"
+  type        = bool
+  default     = false
+}
+
+variable "master_ipv4_cidr_block" {
+  description = "The IP range in CIDR notation for the master network in a private GKE cluster. This block is used to assign IP addresses to the master nodes and control access to the master API server. This is only required when 'enable_private_nodes' is set to true."
+  type        = string
+  default     = ""
+}
+
