@@ -46,18 +46,6 @@ variable "initial_node_count" {
   description = "The number of nodes to create in this cluster's default node pool."
 }
 
-variable "google_container_node_pool_enabled" {
-  type        = bool
-  default     = true
-  description = "Flag to control the cluster_enabled creation."
-}
-
-variable "node_count" {
-  type        = number
-  default     = 1
-  description = "The number of nodes to create in this cluster's default node pool."
-}
-
 variable "master_authorized_networks" {
   type = list(object({
     cidr_block   = string
@@ -91,13 +79,6 @@ variable "service_account" {
   type        = string
   default     = ""
   description = "The Google Cloud Platform Service Account to be used by the node VMs created by GKE Autopilot or NAP."
-}
-
-variable "project" {
-  type        = string
-  default     = ""
-  description = "The project ID to host the cluster in"
-
 }
 
 ######################### Autoscaling ###########################
@@ -228,18 +209,6 @@ variable "cluster_autoscaling" {
   description = "Node Auto-Provisioning with Cluster Autoscaler to automatically adjust the size of the cluster"
 }
 
-variable "ip_allocation_policy" {
-  type        = bool
-  default     = false
-  description = "Configuration of cluster IP allocation for VPC-native clusters. If this block is unset during creation, it will be set by the GKE backend."
-}
-
-variable "networking_mode" {
-  type        = bool
-  default     = false
-  description = "Determines whether alias IPs or routes will be used for pod IPs in the cluster. Options are VPC_NATIVE or ROUTES."
-}
-
 ########## Addons Config ##########
 
 variable "http_load_balancing" {
@@ -264,12 +233,6 @@ variable "pod_security_policy" {
   type        = bool
   default     = true
   description = "PodSecurityPolicy controller for this cluster. If enabled, pods must be valid under a PodSecurityPolicy to be created."
-}
-
-variable "filestore_csi_driver" {
-  type        = bool
-  default     = false
-  description = "Set it true you if want to enable filestore csi driver"
 }
 
 variable "spot" {
