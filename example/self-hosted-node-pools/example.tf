@@ -81,6 +81,12 @@ module "gke" {
   enable_private_endpoint    = false
   enable_private_nodes       = true
   master_ipv4_cidr_block     = "10.13.0.0/28"
+  cluster_network_policy = {
+    policy1 = {
+      enabled  = true
+      provider = "CALICO"
+    }
+  }
   master_authorized_networks = [
     {
       cidr_block   = "10.0.0.7/32"
