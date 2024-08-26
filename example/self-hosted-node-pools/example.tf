@@ -22,6 +22,7 @@ module "subnet" {
   environment = var.environment
   label_order = var.label_order
   gcp_region  = "us-central1"
+  version     = "1.0.1"
 
   google_compute_subnetwork_enabled  = true
   google_compute_firewall_enabled    = true
