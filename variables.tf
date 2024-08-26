@@ -73,11 +73,12 @@ variable "master_authorized_networks" {
 }
 
 variable "cluster_network_policy" {
-  type = list(object({
-    cidr_block   = string
-    display_name = string
+  description = "A map of network policy configurations to apply to the GKE cluster."
+  type = map(object({
+    enabled  = bool
+    provider = string
   }))
-  description = "List of master authorized networks"
+  default = {}
 }
 
 variable "managed_node_pool" {
