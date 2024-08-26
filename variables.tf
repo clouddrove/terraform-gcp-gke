@@ -266,9 +266,10 @@ variable "master_ipv4_cidr_block" {
 }
 
 variable "labels" {
-  description = "A map of labels to apply to the GKE cluster and its resources."
-  type        = string
-  default     = {}
+  type = map(string)
+  default = {
+    application = "my-app"
+  }
 }
 
 variable "cluster_secondary_range_name" {

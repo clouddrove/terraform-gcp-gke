@@ -76,7 +76,7 @@ module "gke" {
   subnetwork                    = module.subnet.id
   project_id                    = var.gcp_project_id
   region                        = var.gcp_region
-  labels                        = "dev-gke"
+  
   cluster_name                  = "test-gke"
   location                      = "us-central1"
   gke_version                   = "1.30.2-gke.1587003"
@@ -95,7 +95,9 @@ module "gke" {
   master_ipv4_cidr_block        = "10.13.0.0/28"
   cluster_secondary_range_name  = "pod-range"
   services_secondary_range_name = "svc-range"
-  metadata                      = true
+  labels = {
+  application = "my-other-app"
+  }
   cluster_network_policy = {
     policy1 = {
       enabled  = true
