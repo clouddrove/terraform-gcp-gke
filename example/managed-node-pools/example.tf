@@ -72,11 +72,11 @@ module "gke" {
   environment = var.environment
   label_order = var.label_order
 
-  network                       = module.vpc.vpc_id
-  subnetwork                    = module.subnet.id
-  project_id                    = var.gcp_project_id
-  region                        = var.gcp_region
-  
+  network    = module.vpc.vpc_id
+  subnetwork = module.subnet.id
+  project_id = var.gcp_project_id
+  region     = var.gcp_region
+
   cluster_name                  = "test-gke"
   location                      = "us-central1"
   gke_version                   = "1.30.2-gke.1587003"
@@ -92,11 +92,12 @@ module "gke" {
   pod_security_policy           = true
   enable_private_endpoint       = false
   enable_private_nodes          = true
+  metadata                      = true
   master_ipv4_cidr_block        = "10.13.0.0/28"
   cluster_secondary_range_name  = "pod-range"
   services_secondary_range_name = "svc-range"
   labels = {
-  application = "my-other-app"
+    application = "my-other-app"
   }
   cluster_network_policy = {
     policy1 = {

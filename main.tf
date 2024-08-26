@@ -62,7 +62,7 @@ resource "google_container_cluster" "primary" {
         preemptible  = var.enable_preemptible
         spot         = var.spot
 
-        labels = var.labels 
+        labels = var.labels
       }
     }
   }
