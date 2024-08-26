@@ -265,3 +265,28 @@ variable "master_ipv4_cidr_block" {
   default     = ""
 }
 
+variable "labels" {
+  description = "A map of labels to apply to the GKE cluster and its resources."
+  type        = map(string)
+  default     = {}
+}
+
+variable "cluster_secondary_range_name" {
+  type        = string
+  default     = "pods-range"
+  description = "The name of the secondary IP range for pods in the GKE cluster."
+}
+
+variable "services_secondary_range_name" {
+  type        = string
+  default     = "services-range"
+  description = "The name of the secondary IP range for services in the GKE cluster."
+
+}
+
+variable "metadata" {
+  type = map(string)
+  default = {
+    disable-legacy-endpoints = "true"
+  }
+}

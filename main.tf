@@ -22,8 +22,10 @@ resource "google_container_cluster" "primary" {
   cluster_ipv4_cidr        = var.cluster_ipv4_cidr
   initial_node_count       = var.managed_node_pool == {} ? var.initial_node_count : 0
 
+
   cluster_autoscaling {
     enabled = var.cluster_autoscaling
+
   }
   pod_security_policy_config {
     enabled = var.pod_security_policy
@@ -42,6 +44,12 @@ resource "google_container_cluster" "primary" {
       disabled = !var.network_policy
     }
   }
+
+  ip_allocation_policy {
+    cluster_secondary_range_name  = var.cluster_secondary_range_name
+    services_secondary_range_name = var.services_secondary_range_name
+  }
+
   dynamic "node_pool" {
     for_each = { for k, v in var.managed_node_pool : k => v if var.enabled }
     content {
@@ -53,6 +61,8 @@ resource "google_container_cluster" "primary" {
         disk_type    = node_pool.value.disk_type
         preemptible  = var.enable_preemptible
         spot         = var.spot
+
+        labels = var.labels
       }
     }
   }
@@ -110,6 +120,11 @@ resource "google_container_node_pool" "node_pool" {
     disk_size_gb    = var.disk_size_gb
     disk_type       = var.disk_type
     preemptible     = var.preemptible
+
+
+    metadata = {
+      disable-legacy-endpoints = "true"
+    }
   }
 
   lifecycle {
