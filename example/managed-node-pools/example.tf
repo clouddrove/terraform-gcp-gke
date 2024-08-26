@@ -68,7 +68,6 @@ module "gke" {
   cluster_name               = "test-gke"
   location                   = "us-central1"
   gke_version                = "1.30.2-gke.1587003"
-  module_enabled             = true
   remove_default_node_pool   = true
   service_account            = ""
   deletion_protection        = false

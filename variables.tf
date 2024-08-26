@@ -16,12 +16,6 @@ variable "name" {
   description = "Name of the resource. Provided by the client when the resource is created. "
 }
 
-variable "module_enabled" {
-  type        = bool
-  default     = true
-  description = "Flag to control the service_account_enabled creation."
-}
-
 variable "enabled" {
   type        = bool
   default     = true
@@ -104,12 +98,6 @@ variable "project" {
   default     = ""
   description = "The project ID to host the cluster in"
 
-}
-
-variable "cluster" {
-  type        = string
-  default     = ""
-  description = "The cluster to create the node pool for."
 }
 
 ######################### Autoscaling ###########################
@@ -252,13 +240,6 @@ variable "networking_mode" {
   description = "Determines whether alias IPs or routes will be used for pod IPs in the cluster. Options are VPC_NATIVE or ROUTES."
 }
 
-variable "logging_config" {
-  type        = bool
-  default     = false
-  description = "Logging configuration for the cluster"
-
-}
-
 ########## Addons Config ##########
 
 variable "http_load_balancing" {
@@ -283,12 +264,6 @@ variable "pod_security_policy" {
   type        = bool
   default     = true
   description = "PodSecurityPolicy controller for this cluster. If enabled, pods must be valid under a PodSecurityPolicy to be created."
-}
-
-variable "dns_cache" {
-  type        = bool
-  default     = false
-  description = "Set it true you if want to dns cache"
 }
 
 variable "filestore_csi_driver" {
