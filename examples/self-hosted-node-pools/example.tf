@@ -91,8 +91,8 @@ module "gke" {
   enable_private_endpoint       = false
   enable_private_nodes          = false
   master_ipv4_cidr_block        = "10.13.0.0/28"
-  cluster_secondary_range_name  = "pod-range"
-  services_secondary_range_name = "svc-range"
+  cluster_ipv4_cidr_block       = "/14"
+  services_ipv4_cidr_block      = "/20"
   workload_metadata_mode        = "GKE_METADATA"
   cluster_network_policy = {
     policy1 = {
