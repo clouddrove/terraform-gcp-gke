@@ -98,7 +98,7 @@ module "gke" {
   workload_metadata_mode        = "GKE_METADATA"
   cluster_network_policy = {
     policy1 = {
-      enabled  = true
+      enabled  = false
       provider = "CALICO"
     }
   }
