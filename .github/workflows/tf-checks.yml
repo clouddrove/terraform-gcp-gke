@@ -5,11 +5,12 @@ on:
   pull_request:
   workflow_dispatch:
 jobs:
-  tf-checks-aws-managed-example:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.9
+  basic:
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
-      working_directory: './example/managed-node-pools/'
-  tf-checks-complete-example:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.9
+      working_directory: './examples/managed-node-pools/'
+ 
+  complete:
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
-      working_directory: './example/self-hosted-node-pools/'
+      working_directory: './examples/self-hosted-node-pools/'
