@@ -272,13 +272,13 @@ variable "labels" {
 variable "cluster_ipv4_cidr_block" {
   description = "The IP range for the cluster pod IPs"
   type        = string
-  default     = "/14"  
+  default     = "/14"
 }
 
 variable "services_ipv4_cidr_block" {
   description = "The IP range for the services IPs"
   type        = string
-  default     = "/20"  
+  default     = "/20"
 }
 
 variable "workload_metadata_mode" {
