@@ -269,16 +269,16 @@ variable "labels" {
   }
 }
 
-variable "cluster_secondary_range_name" {
+variable "cluster_ipv4_cidr_block" {
+  description = "The IP range for the cluster pod IPs"
   type        = string
-  default     = "pods-range"
-  description = "The name of the secondary IP range for pods in the GKE cluster."
+  default     = "/14"  
 }
 
-variable "services_secondary_range_name" {
+variable "services_ipv4_cidr_block" {
+  description = "The IP range for the services IPs"
   type        = string
-  default     = "services-range"
-  description = "The name of the secondary IP range for services in the GKE cluster."
+  default     = "/20"  
 }
 
 variable "workload_metadata_mode" {
