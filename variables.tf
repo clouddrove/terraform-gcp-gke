@@ -47,12 +47,17 @@ variable "initial_node_count" {
 }
 
 variable "cluster_network_policy" {
-  description = "A map of network policy configurations to apply to the GKE cluster."
+  description = "Network policy configuration for the GKE cluster"
   type = map(object({
     enabled  = bool
     provider = string
   }))
-  default = true
+  default = {
+    policy1 = {
+      enabled  = true
+      provider = "CALICO"
+    }
+  }
 }
 
 variable "managed_node_pool" {
