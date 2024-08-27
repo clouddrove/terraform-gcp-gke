@@ -24,7 +24,7 @@ resource "google_container_cluster" "primary" {
 
   dynamic "master_authorized_networks_config" {
     for_each = var.enable_master_authorized_networks ? [1] : []
-    
+
     content {
       dynamic "cidr_blocks" {
         for_each = var.master_authorized_networks
