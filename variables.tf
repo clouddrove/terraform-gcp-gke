@@ -290,3 +290,9 @@ variable "master_authorized_networks" {
   }))
   default = []
 }
+
+variable "enable_master_authorized_networks" {
+  description = "Whether to enable master authorized networks for the GKE cluster."
+  type        = bool
+  default     = false
+}

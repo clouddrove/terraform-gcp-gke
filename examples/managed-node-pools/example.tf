@@ -102,6 +102,7 @@ module "gke" {
       provider = "CALICO"
     }
   }
+  enable_master_authorized_networks = false
   master_authorized_networks = [
     {
       cidr_block   = "192.168.1.0/24"

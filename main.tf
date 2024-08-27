@@ -22,13 +22,17 @@ resource "google_container_cluster" "primary" {
   cluster_ipv4_cidr        = var.cluster_ipv4_cidr
   initial_node_count       = var.managed_node_pool == {} ? var.initial_node_count : 0
 
-  master_authorized_networks_config {
-    dynamic "cidr_blocks" {
-      for_each = var.master_authorized_networks
+  dynamic "master_authorized_networks_config" {
+    for_each = var.enable_master_authorized_networks ? [1] : []
+    
+    content {
+      dynamic "cidr_blocks" {
+        for_each = var.master_authorized_networks
 
-      content {
-        cidr_block   = cidr_blocks.value.cidr_block
-        display_name = cidr_blocks.value.display_name
+        content {
+          cidr_block   = cidr_blocks.value.cidr_block
+          display_name = cidr_blocks.value.display_name
+        }
       }
     }
   }
