@@ -282,11 +282,19 @@ variable "services_secondary_range_name" {
   type        = string
   default     = "services-range"
   description = "The name of the secondary IP range for services in the GKE cluster."
-
 }
 
 variable "workload_metadata_mode" {
   description = "The mode for workload metadata configuration."
   type        = string
   default     = "GKE_METADATA"
+}
+
+variable "master_authorized_networks" {
+  description = "A list of CIDR blocks that are allowed to access the master node."
+  type = list(object({
+    cidr_block   = string
+    display_name = string
+  }))
+  default = []
 }

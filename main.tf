@@ -22,6 +22,17 @@ resource "google_container_cluster" "primary" {
   cluster_ipv4_cidr        = var.cluster_ipv4_cidr
   initial_node_count       = var.managed_node_pool == {} ? var.initial_node_count : 0
 
+  master_authorized_networks_config {
+    dynamic "cidr_blocks" {
+      for_each = var.master_authorized_networks
+
+      content {
+        cidr_block   = cidr_blocks.value.cidr_block
+        display_name = cidr_blocks.value.display_name
+      }
+    }
+  }
+
 
   cluster_autoscaling {
     enabled = var.cluster_autoscaling
@@ -67,15 +78,6 @@ resource "google_container_cluster" "primary" {
         workload_metadata_config {
           mode = var.workload_metadata_mode
         }
-      }
-    }
-  }
-  dynamic "master_authorized_networks_config" {
-    for_each = var.master_authorized_networks
-    content {
-      cidr_blocks {
-        cidr_block   = master_authorized_networks_config.value["cidr_block"]
-        display_name = master_authorized_networks_config.value["display_name"]
       }
     }
   }

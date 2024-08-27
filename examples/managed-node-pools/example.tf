@@ -104,9 +104,9 @@ module "gke" {
   }
   master_authorized_networks = [
     {
-      cidr_block   = "10.0.0.7/32"
-      display_name = "net1"
-    }
+      cidr_block   = "192.168.1.0/24"
+      display_name = "Office Network"
+    },
   ]
   managed_node_pool = [
     {
