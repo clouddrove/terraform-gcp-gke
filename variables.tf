@@ -46,14 +46,6 @@ variable "initial_node_count" {
   description = "The number of nodes to create in this cluster's default node pool."
 }
 
-variable "master_authorized_networks" {
-  type = list(object({
-    cidr_block   = string
-    display_name = string
-  }))
-  description = "List of master authorized networks"
-}
-
 variable "cluster_network_policy" {
   description = "A map of network policy configurations to apply to the GKE cluster."
   type = map(object({
