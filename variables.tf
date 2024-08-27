@@ -52,7 +52,7 @@ variable "cluster_network_policy" {
     enabled  = bool
     provider = string
   }))
-  default = {}
+  default = true
 }
 
 variable "managed_node_pool" {
@@ -248,7 +248,7 @@ variable "enable_private_endpoint" {
 variable "enable_private_nodes" {
   description = "Enable or disable private nodes for the GKE cluster"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "master_ipv4_cidr_block" {
@@ -294,5 +294,5 @@ variable "master_authorized_networks" {
 variable "enable_master_authorized_networks" {
   description = "Whether to enable master authorized networks for the GKE cluster."
   type        = bool
-  default     = false
+  default     = true
 }

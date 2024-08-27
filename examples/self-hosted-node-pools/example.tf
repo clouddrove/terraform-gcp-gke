@@ -85,11 +85,11 @@ module "gke" {
   cluster_autoscaling           = false
   http_load_balancing           = false
   horizontal_pod_autoscaling    = false
-  network_policy                = true
+  network_policy                = false
   pod_security_policy           = true
   spot                          = true
   enable_private_endpoint       = false
-  enable_private_nodes          = true
+  enable_private_nodes          = false
   master_ipv4_cidr_block        = "10.13.0.0/28"
   cluster_secondary_range_name  = "pod-range"
   services_secondary_range_name = "svc-range"
@@ -100,11 +100,12 @@ module "gke" {
       provider = "CALICO"
     }
   }
+  enable_master_authorized_networks = false
   master_authorized_networks = [
     {
-      cidr_block   = "10.0.0.7/32"
-      display_name = "net1"
-    }
+      cidr_block   = "192.168.1.0/24"
+      display_name = "Office Network"
+    },
   ]
   self_node_pools = [
     {
