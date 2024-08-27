@@ -293,7 +293,12 @@ variable "master_authorized_networks" {
     cidr_block   = string
     display_name = string
   }))
-  default = []
+  default = [
+    {
+      cidr_block   = "10.0.0.0/28"
+      display_name = "default-network"
+    }
+  ]
 }
 
 variable "enable_master_authorized_networks" {
