@@ -262,13 +262,6 @@ variable "master_ipv4_cidr_block" {
   default     = ""
 }
 
-variable "labels" {
-  type = map(string)
-  default = {
-    application = "my-app"
-  }
-}
-
 variable "cluster_ipv4_cidr_block" {
   description = "The IP range for the cluster pod IPs"
   type        = string
@@ -307,14 +300,4 @@ variable "enable_master_authorized_networks" {
   default     = true
 }
 
-variable "enable_resource_labels" {
-  description = "Boolean to enable or disable resource labels on the GKE cluster."
-  type        = bool
-  default     = true
-}
 
-variable "resource_labels" {
-  description = "A map of resource labels to be applied to the GKE cluster."
-  type        = map(string)
-  default     = {}
-}
