@@ -309,5 +309,7 @@ variable "enable_resource_labels" {
 variable "resource_labels" {
   description = "Resource labels for GCE resources."
   type        = map(string)
-  default     = {}
+  default = {
+    "env" = "production"
+  }
 }
