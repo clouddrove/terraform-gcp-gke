@@ -21,6 +21,7 @@ resource "google_container_cluster" "primary" {
   deletion_protection      = var.deletion_protection
   cluster_ipv4_cidr        = var.cluster_ipv4_cidr
   initial_node_count       = var.managed_node_pool == {} ? var.initial_node_count : 0
+  node_locations           = ["us-central1-a"]
 
   dynamic "master_authorized_networks_config" {
     for_each = var.enable_master_authorized_networks ? [1] : []
@@ -37,6 +38,7 @@ resource "google_container_cluster" "primary" {
     }
   }
 
+ 
 
 
   resource_labels = var.enable_resource_labels ? var.resource_labels : {}
@@ -120,6 +122,7 @@ resource "google_container_node_pool" "node_pool" {
   location   = var.node_location
   cluster    = join("", google_container_cluster.primary[*].id)
   node_count = var.initial_node_count
+  
 
   autoscaling {
     min_node_count  = var.min_node_count
@@ -139,6 +142,7 @@ resource "google_container_node_pool" "node_pool" {
     disk_size_gb    = var.disk_size_gb
     disk_type       = var.disk_type
     preemptible     = var.preemptible
+    
 
 
 

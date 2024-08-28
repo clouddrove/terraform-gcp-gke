@@ -1,7 +1,7 @@
 provider "google" {
-  project = "my-project-44865-424207"
-  region  = "us-central1"
-  zone    = "us-central1-b"
+  project = var.gcp_project_id
+  region  = var.gcp_region
+  zone    = var.gcp_zone
 }
 
 module "vpc" {
@@ -9,8 +9,8 @@ module "vpc" {
   version = "1.0.0"
 
   name = "test-vpc"
-  #environment                    = var.environment
-  #label_order                    = var.label_order
+  environment                    = var.environment
+  label_order                    = var.label_order
   google_compute_network_enabled = true
   enable_ula_internal_ipv6       = false
 }
@@ -19,8 +19,8 @@ module "subnet" {
   source = "clouddrove/subnet/gcp"
 
   name = "dev-test"
-  #environment = var.environment
-  #label_order = var.label_order
+  environment = var.environment
+  label_order = var.label_order
   gcp_region = "us-central1"
   version    = "1.0.1"
 
@@ -31,7 +31,7 @@ module "subnet" {
   module_enabled                     = true
   ipv6_access_type                   = "EXTERNAL"
   network                            = module.vpc.vpc_id
-  project_id                         = "my-project-44865-424207"
+  project_id                         = var.gcp_project_id
   private_ip_google_access           = true
   allow                              = [{ "protocol" : "tcp", "ports" : ["1-65535"] }]
   source_ranges                      = ["10.10.0.0/16"]
@@ -54,13 +54,13 @@ module "subnet" {
     }
   ]
 
-  # log_config = {
-  #   aggregation_interval = "INTERVAL_10_MIN"
-  #   flow_sampling        = 0.5
-  #   metadata             = "INCLUDE_ALL_METADATA"
-  #   metadata_fields      = ["SRC_IP", "DST_IP"]
-  #   filter_expr          = "true"
-  # }
+  log_config = {
+    aggregation_interval = "INTERVAL_10_MIN"
+    flow_sampling        = 0.5
+    metadata             = "INCLUDE_ALL_METADATA"
+    metadata_fields      = ["SRC_IP", "DST_IP"]
+    filter_expr          = "true"
+  }
 
 }
 
@@ -68,20 +68,20 @@ module "subnet" {
 module "gke" {
   source = "../../"
 
-  name = "gke-1"
-  #environment = var.environment
-  #label_order = var.label_order
+  name = "gke"
+  environment = var.environment
+  label_order = var.label_order
 
   network    = module.vpc.vpc_id
   subnetwork = module.subnet.id
-  project_id = "my-project-44865-424207"
+  project_id = var.gcp_project_id
   region     = "us-central1"
 
   cluster_name                    = "test-gke"
   location                        = "us-central1"
   gke_version                     = "1.30.2-gke.1587003"
   remove_default_node_pool        = false
-  service_account                 = "295233741425-compute@developer.gserviceaccount.com"
+  service_account                 = "example@example.gserviceaccount.com"
   deletion_protection             = false
   cluster_autoscaling             = false
   http_load_balancing             = false
@@ -99,7 +99,6 @@ module "gke" {
   cluster_ipv4_cidr_block         = "/24"
   services_ipv4_cidr_block        = "/20"
   workload_metadata_mode          = "GKE_METADATA"
-  #enable_metadata = false
   cluster_network_policy = {
     policy1 = {
       enabled  = false
