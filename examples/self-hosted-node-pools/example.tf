@@ -130,7 +130,7 @@ module "gke" {
   labels = {
     application = "app"
   }
-  enable_resource_labels = false 
+  enable_resource_labels = false
   resource_labels = {
     environment = "production"
   }

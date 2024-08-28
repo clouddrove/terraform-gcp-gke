@@ -310,7 +310,7 @@ variable "enable_master_authorized_networks" {
 variable "enable_resource_labels" {
   description = "Boolean to enable or disable resource labels on the GKE cluster."
   type        = bool
-  default     = true  
+  default     = true
 }
 
 variable "resource_labels" {
