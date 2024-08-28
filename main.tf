@@ -77,7 +77,7 @@ resource "google_container_cluster" "primary" {
         preemptible  = var.enable_preemptible
         spot         = var.spot
 
-        
+
 
         workload_metadata_config {
           mode = var.workload_metadata_mode
