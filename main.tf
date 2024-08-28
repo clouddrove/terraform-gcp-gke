@@ -37,6 +37,8 @@ resource "google_container_cluster" "primary" {
     }
   }
 
+
+
   resource_labels = var.enable_resource_labels ? var.resource_labels : {}
 
   cluster_autoscaling {
@@ -61,17 +63,19 @@ resource "google_container_cluster" "primary" {
     }
   }
 
-  ip_allocation_policy {
-    cluster_ipv4_cidr_block  = var.cluster_ipv4_cidr_block
-    services_ipv4_cidr_block = var.services_ipv4_cidr_block
-
+  dynamic "ip_allocation_policy" {
+    for_each = var.enable_ip_allocation_policy ? [1] : []
+    content {
+      cluster_ipv4_cidr_block  = var.cluster_ipv4_cidr_block
+      services_ipv4_cidr_block = var.services_ipv4_cidr_block
+    }
   }
 
   dynamic "node_pool" {
-    for_each = { for k, v in var.managed_node_pool : k => v if var.enabled }
+    for_each = var.enabled ? { for k, v in var.managed_node_pool : k => v } : {}
     content {
       name               = node_pool.value.name
-      initial_node_count = node_pool.value.initial_node_count
+      initial_node_count = var.initial_node_count
       node_config {
         machine_type = node_pool.value.machine_type
         disk_size_gb = node_pool.value.disk_size_gb
@@ -80,10 +84,13 @@ resource "google_container_cluster" "primary" {
         spot         = var.spot
 
 
-
-        workload_metadata_config {
-          mode = var.workload_metadata_mode
+        dynamic "workload_metadata_config" {
+          for_each = var.enable_workload_metadata_config ? [1] : []
+          content {
+            mode = var.workload_metadata_mode
+          }
         }
+
       }
     }
   }
@@ -110,7 +117,7 @@ resource "google_container_node_pool" "node_pool" {
 
   name       = each.value.name
   project    = var.project_id
-  location   = var.location
+  location   = var.node_location
   cluster    = join("", google_container_cluster.primary[*].id)
   node_count = var.initial_node_count
 
@@ -132,6 +139,7 @@ resource "google_container_node_pool" "node_pool" {
     disk_size_gb    = var.disk_size_gb
     disk_type       = var.disk_type
     preemptible     = var.preemptible
+
 
 
     metadata = {

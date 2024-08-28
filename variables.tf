@@ -67,11 +67,26 @@ variable "managed_node_pool" {
 }
 
 variable "self_node_pools" {
-  type        = any
-  default     = {}
-  description = "Map of self-managed node pools definitions to create"
+  description = "Map of self-defined node pools"
+  type = map(object({
+    name               = string
+    initial_node_count = number
+    machine_type       = string
+    disk_size_gb       = number
+    disk_type          = string
+    preemptible        = bool
+  }))
+  default = {
+    default_pool = {
+      name               = "default-pool"
+      initial_node_count = 1
+      machine_type       = ""
+      disk_size_gb       = 100
+      disk_type          = "pd-standard"
+      preemptible        = false
+    }
+  }
 }
-
 variable "service_account" {
   type        = string
   default     = ""
@@ -81,7 +96,7 @@ variable "service_account" {
 ######################### Autoscaling ###########################
 variable "min_node_count" {
   type    = number
-  default = 2
+  default = 0
 }
 
 variable "max_node_count" {
@@ -265,13 +280,13 @@ variable "master_ipv4_cidr_block" {
 variable "cluster_ipv4_cidr_block" {
   description = "The IP range for the cluster pod IPs"
   type        = string
-  default     = "/14"
+  default     = ""
 }
 
 variable "services_ipv4_cidr_block" {
   description = "The IP range for the services IPs"
   type        = string
-  default     = "/20"
+  default     = ""
 }
 
 variable "workload_metadata_mode" {
@@ -313,3 +328,29 @@ variable "resource_labels" {
     "env" = "production"
   }
 }
+
+variable "enable_metadata" {
+  description = "Enable or disable the metadata block."
+  type        = bool
+  default     = false
+}
+
+variable "enable_ip_allocation_policy" {
+  description = "Set to true to enable IP allocation policy, false to disable"
+  type        = bool
+  default     = false
+}
+
+
+variable "enable_workload_metadata_config" {
+  description = "Set to true to enable IP allocation policy, false to disable"
+  type        = bool
+  default     = false
+}
+
+variable "node_location" {
+  type        = string
+  default     = ""
+  description = "The location (region or zone) in which the cluster master will be created, as well as the default node location."
+}
+
