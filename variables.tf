@@ -300,4 +300,14 @@ variable "enable_master_authorized_networks" {
   default     = true
 }
 
+variable "enable_resource_labels" {
+  description = "Flag to enable or disable GCE resource labels."
+  type        = bool
+  default     = false
+}
 
+variable "resource_labels" {
+  description = "Resource labels for GCE resources."
+  type        = map(string)
+  default     = {}
+}

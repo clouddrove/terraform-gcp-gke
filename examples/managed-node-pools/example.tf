@@ -129,4 +129,10 @@ module "gke" {
       preemptible        = true
     }
   ]
+
+  enable_resource_labels = false
+
+  resource_labels = {
+    "env" = "production"
+  }
 }
