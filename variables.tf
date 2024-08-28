@@ -303,7 +303,7 @@ variable "enable_master_authorized_networks" {
 variable "enable_resource_labels" {
   description = "Flag to enable or disable GCE resource labels."
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "resource_labels" {
