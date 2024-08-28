@@ -306,3 +306,15 @@ variable "enable_master_authorized_networks" {
   type        = bool
   default     = true
 }
+
+variable "enable_resource_labels" {
+  description = "Boolean to enable or disable resource labels on the GKE cluster."
+  type        = bool
+  default     = true  
+}
+
+variable "resource_labels" {
+  description = "A map of resource labels to be applied to the GKE cluster."
+  type        = map(string)
+  default     = {}
+}
