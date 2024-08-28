@@ -37,9 +37,6 @@ resource "google_container_cluster" "primary" {
     }
   }
 
-
-  resource_labels = var.enable_resource_labels ? var.resource_labels : null
-
   cluster_autoscaling {
     enabled = var.cluster_autoscaling
 
