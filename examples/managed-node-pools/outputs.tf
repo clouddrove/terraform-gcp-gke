@@ -1,7 +1,8 @@
-output "name" {
-  value = module.gke[*].name
-}
+# -----------------------------------------------------------------------------
+# Outputs
+# -----------------------------------------------------------------------------
 
-output "id" {
-  value = module.gke[*].id
+output "name" {
+  description = "The name of the GKE cluster created by the module."
+  value       = module.gke-dev-jetic-cluster.name
 }

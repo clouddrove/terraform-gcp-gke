@@ -8,7 +8,7 @@ module "vpc" {
   source  = "clouddrove/vpc/gcp"
   version = "1.0.0"
 
-  name = "test-vpc"
+  name                           = "test-vpc"
   environment                    = var.environment
   label_order                    = var.label_order
   google_compute_network_enabled = true
@@ -18,11 +18,11 @@ module "vpc" {
 module "subnet" {
   source = "clouddrove/subnet/gcp"
 
-  name = "dev-test"
+  name        = "dev-test"
   environment = var.environment
   label_order = var.label_order
-  gcp_region = "us-central1"
-  version    = "1.0.1"
+  gcp_region  = "us-central1"
+  version     = "1.0.1"
 
 
   google_compute_subnetwork_enabled  = true
@@ -31,7 +31,7 @@ module "subnet" {
   module_enabled                     = true
   ipv6_access_type                   = "EXTERNAL"
   network                            = module.vpc.vpc_id
-  project_id                         = var.gcp_project_id
+  project_id                         = "my-project-44865-424207"
   private_ip_google_access           = true
   allow                              = [{ "protocol" : "tcp", "ports" : ["1-65535"] }]
   source_ranges                      = ["10.10.0.0/16"]
@@ -64,78 +64,124 @@ module "subnet" {
 
 }
 
+module "gke-dev-jetic-cluster" {
+  source                     = "../../"
+  project_id                 = var.gcp_project_id
+  name                       = "cluster-1"
+  region                     = "us-central1"
+  zones                      = ["us-central1-c"]
+  network                    = "test-vpc-dev"
+  subnetwork                 = "dev-test"
+  ip_range_pods              = "pods"
+  workload_config_audit_mode = "BASIC"
+  security_posture_mode      = "BASIC"
+  kubernetes_version         = "1.30.2-gke.1587003"
+  regional                   = true
 
-module "gke" {
-  source = "../../"
+  logging_service                   = "logging.googleapis.com/kubernetes"
+  monitoring_service                = "monitoring.googleapis.com/kubernetes"
+  enable_private_nodes              = true
+  release_channel                   = "STABLE"
+  horizontal_pod_autoscaling        = true
+  http_load_balancing               = false
+  filestore_csi_driver              = true
+  istio                             = false
+  network_policy                    = true
+  ip_range_services                 = "services"
+  create_service_account            = false
+  cluster_resource_labels           = { env = "test" }
+  service_account                   = "example@example.gserviceaccount.com"
+  remove_default_node_pool          = true
+  disable_legacy_metadata_endpoints = true
+  deletion_protection               = false
 
-  name = "gke"
-  environment = var.environment
-  label_order = var.label_order
 
-  network    = module.vpc.vpc_id
-  subnetwork = module.subnet.id
-  project_id = var.gcp_project_id
-  region     = "us-central1"
-
-  cluster_name                    = "test-gke"
-  location                        = "us-central1"
-  gke_version                     = "1.30.2-gke.1587003"
-  remove_default_node_pool        = false
-  service_account                 = "example@example.gserviceaccount.com"
-  deletion_protection             = false
-  cluster_autoscaling             = false
-  http_load_balancing             = false
-  horizontal_pod_autoscaling      = false
-  network_policy                  = false
-  spot                            = false
-  enable_preemptible              = true
-  pod_security_policy             = true
-  enable_private_endpoint         = false
-  enable_private_nodes            = false
-  master_ipv4_cidr_block          = "10.13.0.0/28"
-  cluster_ipv4_cidr               = "10.0.0.0/16"
-  enable_ip_allocation_policy     = false
-  enable_workload_metadata_config = false
-  cluster_ipv4_cidr_block         = "/24"
-  services_ipv4_cidr_block        = "/20"
-  workload_metadata_mode          = "GKE_METADATA"
-  cluster_network_policy = {
-    policy1 = {
-      enabled  = false
-      provider = "CALICO"
-    }
-  }
-  enable_master_authorized_networks = false
-  master_authorized_networks = [
+  node_pools = [
     {
-      cidr_block   = "192.168.1.0/24"
-      display_name = "Office Network"
+      name                         = "critical"
+      master_version               = "1.30.2-gke.1587003"
+      machine_type                 = "g1-small"
+      node_locations               = "us-central1-c"
+      min_count                    = 1
+      max_count                    = 1
+      local_ssd_count              = 0
+      spot                         = true
+      disk_size_gb                 = 10
+      disk_type                    = "pd-standard"
+      image_type                   = "cos_containerd"
+      enable_gcfs                  = false
+      enable_gvnic                 = false
+      logging_variant              = "DEFAULT"
+      auto_repair                  = true
+      auto_upgrade                 = true
+      create_service_account       = false
+      service_account              = "example@example.gserviceaccount.com"
+      preemptible                  = false
+      initial_node_count           = 1
+      enable_node_pool_autoscaling = false
+      enable_private_nodes         = true
+
+    },
+    {
+      name                         = "application"
+      master_version               = "1.30.2-gke.1587003"
+      machine_type                 = "g1-small"
+      node_locations               = "us-central1-c"
+      min_count                    = 1
+      max_count                    = 2
+      local_ssd_count              = 0
+      spot                         = true
+      disk_size_gb                 = 10
+      disk_type                    = "pd-standard"
+      image_type                   = "cos_containerd"
+      enable_gcfs                  = false
+      enable_gvnic                 = false
+      logging_variant              = "DEFAULT"
+      auto_repair                  = true
+      auto_upgrade                 = true
+      create_service_account       = false
+      service_account              = "example@example.gserviceaccount.com"
+      preemptible                  = false
+      initial_node_count           = 1
+      enable_node_pool_autoscaling = true
+      enable_private_nodes         = true
     },
   ]
-  managed_node_pool = [
-    {
-      name               = "critical"
-      initial_node_count = 1
-      machine_type       = "g1-small"
-      image_type         = "COS_CONTAINERD"
-      disk_size_gb       = "10"
-      disk_type          = "pd-standard"
-      preemptible        = true
-    },
-    {
-      name               = "general"
-      initial_node_count = 1
-      image_type         = "COS_CONTAINERD"
-      machine_type       = "g1-small"
-      disk_size_gb       = "10"
-      disk_type          = "pd-standard"
-      preemptible        = true
+
+  node_pools_labels = {
+    all = {}
+
+    default-node-pool = {
+      default-node-pool = true
     }
-  ]
-
-  enable_resource_labels = false
-
-  resource_labels = {
-    "env" = "production"
   }
+
+  node_pools_metadata = {
+    all = {}
+
+    default-node-pool = {
+      node-pool-metadata-custom-value = "my-node-pool"
+    }
+  }
+
+  node_pools_taints = {
+    all = []
+
+    default-node-pool = [
+      {
+        key    = "default-node-pool"
+        value  = true
+        effect = "PREFER_NO_SCHEDULE"
+      },
+    ]
+  }
+
+  node_pools_tags = {
+    all = []
+
+    default-node-pool = [
+      "default-node-pool",
+    ]
+  }
+
 }
