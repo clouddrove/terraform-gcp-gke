@@ -17,7 +17,7 @@ updates:
       - "approvers"
 
   - package-ecosystem: "terraform" # See documentation for possible values
-    directory: "examples/managed-node-pools" # Location of package manifests
+    directory: "examples/complete-example" # Location of package manifests
     schedule:
       interval: "weekly"
     # Add assignees
