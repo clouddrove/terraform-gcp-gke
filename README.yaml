@@ -31,7 +31,7 @@ prerequesties:
   - name: Terraform
     url: https://learn.hashicorp.com/terraform/getting-started/install.html
     version: ">= 1.3"
-    
+
 providers:
   - name: gcp
     url: https://cloud.google.com/
