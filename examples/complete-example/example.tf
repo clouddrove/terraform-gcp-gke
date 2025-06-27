@@ -31,7 +31,7 @@ module "subnet" {
   module_enabled                     = true
   ipv6_access_type                   = "EXTERNAL"
   network                            = module.vpc.vpc_id
-  project_id                         = "my-project-44865-424207"
+  project_id                         = "project_id"
   private_ip_google_access           = true
   allow                              = [{ "protocol" : "tcp", "ports" : ["1-65535"] }]
   source_ranges                      = ["10.10.0.0/16"]
