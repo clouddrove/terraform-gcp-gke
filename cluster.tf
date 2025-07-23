@@ -5,9 +5,9 @@
 resource "google_container_cluster" "primary" {
   provider = google-beta
 
-  name            = var.name
-  description     = var.description
-  project         = var.project_id
+  name        = var.name
+  description = var.description
+  project     = var.project_id
   #resource_labels = var.cluster_resource_labels
 
   location            = local.location
@@ -497,8 +497,8 @@ resource "google_container_cluster" "primary" {
   depends_on = [google_project_iam_member.service_agent]
 
   pod_security_policy_config {
-  enabled = true
-}
+    enabled = true
+  }
 
 }
 /******************************************
