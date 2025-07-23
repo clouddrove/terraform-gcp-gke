@@ -93,4 +93,6 @@ locals {
     ),
     var.node_pools_linux_node_configs_sysctls
   )
+
+   enable_monitoring_config = var.monitoring_enable_managed_prometheus || var.monitoring_enable_observability_metrics
 }

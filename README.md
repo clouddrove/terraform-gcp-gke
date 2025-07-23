@@ -59,8 +59,8 @@ This table contains both Prerequisites and Providers:
 
 | Description   | Name                                       | Version   |
 |:-------------:|:-------------------------------------------:|:---------:|
-| **Prerequisite** | [Terraform](https://learn.hashicorp.com/terraform/getting-started/install.html) | >= 1.3 |
-| **Provider** | [gcp](https://cloud.google.com/) | >= 5.9.0, < 6 |
+| **Prerequisite** | [Terraform](https://learn.hashicorp.com/terraform/getting-started/install.html) | >= 1.3, < 2.0 |
+| **Provider** | [gcp](https://cloud.google.com/) | >= 6.45.0 |
 
 
 

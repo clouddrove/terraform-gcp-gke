@@ -700,15 +700,12 @@ variable "monitoring_enable_observability_metrics" {
   default     = false
 }
 
-variable "monitoring_observability_metrics_relay_mode" {
-  type        = string
-  description = "Mode used to make advanced datapath metrics relay available."
-  default     = null
-  validation {
-    condition     = var.monitoring_observability_metrics_relay_mode == null ? true : contains(["DISABLED", "INTERNAL_VPC_LB", "EXTERNAL_LB"], var.monitoring_observability_metrics_relay_mode)
-    error_message = "The advanced datapath metrics relay value must be one of DISABLED, INTERNAL_VPC_LB, EXTERNAL_LB."
-  }
+variable "monitoring_enable_observability_metrics_relay" {
+  type        = bool
+  default     = false
+  description = "Whether to enable the relay for observability metrics"
 }
+
 
 variable "monitoring_enabled_components" {
   type        = list(string)
@@ -811,3 +808,5 @@ variable "fleet_project_grant_service_agent" {
   type        = bool
   default     = false
 }
+
+
