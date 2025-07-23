@@ -8,7 +8,7 @@ module "vpc" {
   source  = "clouddrove/vpc/gcp"
   version = "1.0.0"
 
-  name = "vpc"
+  name                           = "vpc"
   environment                    = var.environment
   label_order                    = var.label_order
   google_compute_network_enabled = true
@@ -18,11 +18,11 @@ module "vpc" {
 module "subnet" {
   source = "clouddrove/subnet/gcp"
 
-  name = "dev"
+  name        = "dev"
   environment = var.environment
   label_order = var.label_order
-  gcp_region = "us-central1"
-  version    = "1.0.1"
+  gcp_region  = "us-central1"
+  version     = "1.0.1"
 
   google_compute_subnetwork_enabled  = true
   google_compute_firewall_enabled    = true
@@ -76,23 +76,23 @@ module "gke-dev-jetic-cluster" {
   security_posture_mode      = "BASIC"
   kubernetes_version         = "1.32.4-gke.1415000"
   regional                   = true
-  
-  logging_service                      = "logging.googleapis.com/kubernetes"     # Set to "none" to disable logging
-  monitoring_service                   = "monitoring.googleapis.com/kubernetes"  # Set to "none" to disable monitoring
-  enable_private_nodes                 = true
-  release_channel                      = "STABLE"
-  horizontal_pod_autoscaling           = true
-  http_load_balancing                  = false
-  filestore_csi_driver                 = true
-  istio                                = false
-  network_policy                       = false
-  ip_range_services                    = "services"
-  create_service_account               = false
-  cluster_resource_labels              = { env = "test" }
-  service_account                      = "example@example.gserviceaccount.com"
-  remove_default_node_pool             = true
-  disable_legacy_metadata_endpoints    = true
-  deletion_protection                  = false
+
+  logging_service                   = "logging.googleapis.com/kubernetes"    # Set to "none" to disable logging
+  monitoring_service                = "monitoring.googleapis.com/kubernetes" # Set to "none" to disable monitoring
+  enable_private_nodes              = true
+  release_channel                   = "STABLE"
+  horizontal_pod_autoscaling        = true
+  http_load_balancing               = false
+  filestore_csi_driver              = true
+  istio                             = false
+  network_policy                    = false
+  ip_range_services                 = "services"
+  create_service_account            = false
+  cluster_resource_labels           = { env = "test" }
+  service_account                   = "example@example.gserviceaccount.com"
+  remove_default_node_pool          = true
+  disable_legacy_metadata_endpoints = true
+  deletion_protection               = false
 
 
   node_pools = [
