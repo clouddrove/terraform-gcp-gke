@@ -512,14 +512,14 @@ resource "google_container_cluster" "primary" {
   location       = local.location
   node_locations = local.node_locations
 
-  cluster_ipv4_cidr = var.cluster_ipv4_cidr
-  network            = "projects/${local.network_project_id}/global/networks/${var.network}"
-  subnetwork         = "projects/${local.network_project_id}/regions/${local.region}/subnetworks/${var.subnetwork}"
+  cluster_ipv4_cidr   = var.cluster_ipv4_cidr
+  network             = "projects/${local.network_project_id}/global/networks/${var.network}"
+  subnetwork          = "projects/${local.network_project_id}/regions/${local.region}/subnetworks/${var.subnetwork}"
   deletion_protection = var.deletion_protection
 
   min_master_version = (
     var.release_channel == null || var.release_channel == "UNSPECIFIED"
-  ) ? local.master_version : (
+    ) ? local.master_version : (
     var.kubernetes_version == "latest" ? null : var.kubernetes_version
   )
 
@@ -582,7 +582,7 @@ resource "google_container_cluster" "primary" {
   }
 
   cluster_autoscaling {
-    enabled = var.cluster_autoscaling.enabled
+    enabled             = var.cluster_autoscaling.enabled
     autoscaling_profile = var.cluster_autoscaling.autoscaling_profile != null ? var.cluster_autoscaling.autoscaling_profile : "BALANCED"
 
     dynamic "auto_provisioning_defaults" {
@@ -642,7 +642,7 @@ resource "google_container_cluster" "primary" {
           cidr_block   = cidr_blocks.value.cidr_block
           display_name = cidr_blocks.value.display_name
         }
- 
+
       }
     }
   }
@@ -673,7 +673,7 @@ resource "google_container_cluster" "primary" {
     gcp_filestore_csi_driver_config {
       enabled = var.filestore_csi_driver
     }
-    
+
     config_connector_config {
       enabled = var.config_connector
     }
@@ -723,12 +723,12 @@ resource "google_container_cluster" "primary" {
       for_each = local.cluster_maintenance_window_is_daily
       content {
         start_time = var.maintenance_start_time
-      }  
-    
+      }
+
     }
-    
+
   }
-  
+
   node_pool {
     name               = "default-pool"
     initial_node_count = var.initial_node_count
@@ -767,8 +767,8 @@ resource "google_container_cluster" "primary" {
   }
 
   depends_on = [google_project_iam_member.service_agent]
-  
-  }
+
+}
 
 /******************************************
   Create Container Cluster node pools
