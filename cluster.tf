@@ -626,6 +626,11 @@ resource "google_container_node_pool" "pools" {
         "disable-legacy-endpoints" = tostring(var.disable_legacy_metadata_endpoints)
       },
     )
+
+    workload_metadata_config {
+      mode = "GKE_METADATA"
+    }
+    
     dynamic "taint" {
       for_each = concat(
         local.node_pools_taints["all"],
