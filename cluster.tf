@@ -395,13 +395,19 @@ resource "google_container_cluster" "primary" {
 
       logging_variant = lookup(var.node_pools[0], "logging_variant", "DEFAULT")
 
-      dynamic "workload_metadata_config" {
-        for_each = local.cluster_node_metadata_config
+      #   dynamic "workload_metadata_config" {
+      #      for_each = local.cluster_node_metadata_config
 
-        content {
-          mode = workload_metadata_config.value.mode
-        }
+      #      content {
+      #        mode = lookup(each.value, "node_metadata", workload_metadata_config.value.mode)
+      #    }
+      #  }
+
+      workload_metadata_config {
+        mode = "GKE_METADATA"
       }
+
+
 
       metadata = local.node_pools_metadata["all"]
 
@@ -627,9 +633,9 @@ resource "google_container_node_pool" "pools" {
       },
     )
 
-    # workload_metadata_config {
-    #   mode = "GKE_METADATA"
-    # }
+    workload_metadata_config {
+      mode = "GKE_METADATA"
+    }
 
     dynamic "taint" {
       for_each = concat(
@@ -698,13 +704,13 @@ resource "google_container_node_pool" "pools" {
       }
     }
 
-    dynamic "workload_metadata_config" {
-      for_each = local.cluster_node_metadata_config
+    # dynamic "workload_metadata_config" {
+    #   for_each = local.cluster_node_metadata_config
 
-      content {
-        mode = lookup(each.value, "node_metadata", workload_metadata_config.value.mode)
-      }
-    }
+    #   content {
+    #     mode = lookup(each.value, "node_metadata", workload_metadata_config.value.mode)
+    #   }
+    # }
 
     dynamic "sandbox_config" {
       for_each = tobool((lookup(each.value, "sandbox_enabled", var.sandbox_enabled))) ? ["gvisor"] : []
@@ -872,6 +878,10 @@ resource "google_container_node_pool" "windows_pools" {
         "disable-legacy-endpoints" = tostring(var.disable_legacy_metadata_endpoints)
       },
     )
+    workload_metadata_config {
+      mode = "GKE_METADATA"
+    }
+
     dynamic "taint" {
       for_each = concat(
         local.node_pools_taints["all"],
@@ -939,13 +949,13 @@ resource "google_container_node_pool" "windows_pools" {
       }
     }
 
-    dynamic "workload_metadata_config" {
-      for_each = local.cluster_node_metadata_config
+    # dynamic "workload_metadata_config" {
+    #   for_each = local.cluster_node_metadata_config
 
-      content {
-        mode = lookup(each.value, "node_metadata", workload_metadata_config.value.mode)
-      }
-    }
+    #   content {
+    #     mode = lookup(each.value, "node_metadata", workload_metadata_config.value.mode)
+    #   }
+    # }
 
     dynamic "sandbox_config" {
       for_each = tobool((lookup(each.value, "sandbox_enabled", var.sandbox_enabled))) ? ["gvisor"] : []
