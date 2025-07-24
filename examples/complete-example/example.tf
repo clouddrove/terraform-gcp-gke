@@ -101,53 +101,57 @@ module "gke-dev-jetic-cluster" {
 
   node_pools = [
     {
-      name                         = "critical"
-      master_version               = "1.32.4-gke.1415000"
-      machine_type                 = "e2-medium"
-      node_locations               = "us-central1-a"
-      min_count                    = 1
-      max_count                    = 1
-      local_ssd_count              = 0
-      spot                         = true
-      disk_size_gb                 = 50
-      disk_type                    = "pd-standard"
-      image_type                   = "cos_containerd"
-      enable_gcfs                  = false
-      enable_gvnic                 = false
-      logging_variant              = "DEFAULT"
-      auto_repair                  = true
-      auto_upgrade                 = true
-      create_service_account       = false
-      service_account              = "example@example.gserviceaccount.com"
-      preemptible                  = false
-      initial_node_count           = 1
-      enable_node_pool_autoscaling = false
-      enable_private_nodes         = true
+      name                              = "critical"
+      master_version                    = "1.32.4-gke.1415000"
+      machine_type                      = "e2-medium"
+      node_locations                    = "us-central1-a"
+      min_count                         = 1
+      max_count                         = 1
+      local_ssd_count                   = 0
+      spot                              = true
+      disk_size_gb                      = 50
+      disk_type                         = "pd-standard"
+      image_type                        = "cos_containerd"
+      enable_gcfs                       = false
+      enable_gvnic                      = false
+      logging_variant                   = "DEFAULT"
+      auto_repair                       = true
+      auto_upgrade                      = true
+      create_service_account            = false
+      service_account                   = "example@example.gserviceaccount.com"
+      preemptible                       = false
+      initial_node_count                = 1
+      enable_node_pool_autoscaling      = false
+      enable_private_nodes              = true
+      disable_legacy_metadata_endpoints = true
+
 
     },
     {
-      name                         = "application"
-      master_version               = "1.32.4-gke.1415000"
-      machine_type                 = "e2-medium"
-      node_locations               = "us-central1-a"
-      min_count                    = 1
-      max_count                    = 1
-      local_ssd_count              = 0
-      spot                         = true
-      disk_size_gb                 = 50
-      disk_type                    = "pd-standard"
-      image_type                   = "cos_containerd"
-      enable_gcfs                  = false
-      enable_gvnic                 = false
-      logging_variant              = "DEFAULT"
-      auto_repair                  = true
-      auto_upgrade                 = true
-      create_service_account       = false
-      service_account              = "example@example.gserviceaccount.com"
-      preemptible                  = false
-      initial_node_count           = 1
-      enable_node_pool_autoscaling = true
-      enable_private_nodes         = true
+      name                              = "application"
+      master_version                    = "1.32.4-gke.1415000"
+      machine_type                      = "e2-medium"
+      node_locations                    = "us-central1-a"
+      min_count                         = 1
+      max_count                         = 1
+      local_ssd_count                   = 0
+      spot                              = true
+      disk_size_gb                      = 50
+      disk_type                         = "pd-standard"
+      image_type                        = "cos_containerd"
+      enable_gcfs                       = false
+      enable_gvnic                      = false
+      logging_variant                   = "DEFAULT"
+      auto_repair                       = true
+      auto_upgrade                      = true
+      create_service_account            = false
+      service_account                   = "example@example.gserviceaccount.com"
+      preemptible                       = false
+      initial_node_count                = 1
+      enable_node_pool_autoscaling      = true
+      enable_private_nodes              = true
+      disable_legacy_metadata_endpoints = true
+
     },
   ]
 
