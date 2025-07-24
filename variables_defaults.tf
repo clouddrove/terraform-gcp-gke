@@ -94,5 +94,10 @@ locals {
     var.node_pools_linux_node_configs_sysctls
   )
 
+  cluster_network_policy = {
+    enabled  = true
+    provider = "CALICO"
+  }
+
   enable_monitoring_config = var.monitoring_enable_managed_prometheus || var.monitoring_enable_observability_metrics
 }

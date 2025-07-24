@@ -387,7 +387,9 @@ variable "cluster_ipv4_cidr" {
 variable "cluster_resource_labels" {
   type        = map(string)
   description = "The GCE resource labels (a map of key/value pairs) to be applied to the cluster"
-  default     = {}
+  default = {
+    environment = "dev"
+  }
 }
 
 
