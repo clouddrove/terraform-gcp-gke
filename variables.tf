@@ -809,4 +809,15 @@ variable "fleet_project_grant_service_agent" {
   default     = false
 }
 
-
+variable "master_authorized_networks_config" {
+  description = "List of CIDR blocks for master authorized networks"
+  type = object({
+    cidr_blocks = list(object({
+      cidr_block   = string
+      display_name = string
+    }))
+  })
+  default = {
+    cidr_blocks = []
+  }
+}

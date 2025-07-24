@@ -157,18 +157,29 @@ resource "google_container_cluster" "primary" {
 
   enable_l4_ilb_subsetting   = var.enable_l4_ilb_subsetting
   enable_fqdn_network_policy = var.enable_fqdn_network_policy
-  dynamic "master_authorized_networks_config" {
-    for_each = local.master_authorized_networks_config
-    content {
-      dynamic "cidr_blocks" {
-        for_each = master_authorized_networks_config.value.cidr_blocks
-        content {
-          cidr_block   = lookup(cidr_blocks.value, "cidr_block", "")
-          display_name = lookup(cidr_blocks.value, "display_name", "")
-        }
+  #   dynamic "master_authorized_networks_config" {
+  #     for_each = local.master_authorized_networks_config
+  #     content {
+  #       dynamic "cidr_blocks" {
+  #         for_each = master_authorized_networks_config.value.cidr_blocks
+  #         content {
+  #           cidr_block   = lookup(cidr_blocks.value, "cidr_block", "")
+  #           display_name = lookup(cidr_blocks.value, "display_name", "")
+  #         }
+  #       }
+  #     }
+  #  }
+
+  master_authorized_networks_config {
+    dynamic "cidr_blocks" {
+      for_each = var.master_authorized_networks_config.cidr_blocks
+      content {
+        cidr_block   = cidr_blocks.value.cidr_block
+        display_name = cidr_blocks.value.display_name
       }
     }
   }
+
 
   dynamic "node_pool_auto_config" {
     for_each = var.cluster_autoscaling.enabled && length(var.network_tags) > 0 ? [1] : []
@@ -497,9 +508,6 @@ resource "google_container_cluster" "primary" {
 
   depends_on = [google_project_iam_member.service_agent]
 
-  # pod_security_policy_config {
-  #   enabled = var.enable_pod_security_policy
-  # }
 }
 
 
