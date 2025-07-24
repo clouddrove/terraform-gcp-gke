@@ -809,8 +809,4 @@ variable "fleet_project_grant_service_agent" {
   default     = false
 }
 
-variable "enable_pod_security_policy" {
-  description = "Enable or disable Pod Security Policy"
-  type        = bool
-  default     = false
-}
+

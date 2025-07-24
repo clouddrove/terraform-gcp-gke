@@ -88,12 +88,15 @@ module "gke-dev-jetic-cluster" {
   network_policy                    = false
   ip_range_services                 = "services"
   create_service_account            = false
-  cluster_resource_labels           = { env = "test" }
   service_account                   = "example@example.gserviceaccount.com"
   remove_default_node_pool          = true
   disable_legacy_metadata_endpoints = true
   deletion_protection               = false
   enable_pod_security_policy        = false
+  cluster_resource_labels = {
+    env  = "test"
+    team = "platform"
+  }
 
 
   node_pools = [
