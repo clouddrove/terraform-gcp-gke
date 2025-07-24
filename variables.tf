@@ -534,13 +534,13 @@ variable "enable_fqdn_network_policy" {
 variable "security_posture_mode" {
   description = "Security posture mode.  Accepted values are `DISABLED` and `BASIC`. Defaults to `DISABLED`."
   type        = string
-  default     = "DISABLED"
+  default     = "STRICT"
 }
 
 variable "security_posture_vulnerability_mode" {
   description = "Security posture vulnerability mode.  Accepted values are `VULNERABILITY_DISABLED` and `VULNERABILITY_BASIC`. Defaults to `VULNERABILITY_DISABLED`."
   type        = string
-  default     = "VULNERABILITY_DISABLED"
+  default     = "VULNERABILITY_MODE_UNSPECIFIED"
 }
 
 variable "disable_default_snat" {
@@ -809,4 +809,8 @@ variable "fleet_project_grant_service_agent" {
   default     = false
 }
 
-
+variable "enable_pod_security_policy" {
+  description = "Enable or disable Pod Security Policy"
+  type        = bool
+  default     = false
+}

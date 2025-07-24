@@ -496,9 +496,11 @@ resource "google_container_cluster" "primary" {
 
   depends_on = [google_project_iam_member.service_agent]
 
-  pod_security_policy_config {
-    enabled = true
-  }
+  # pod_security_policy_config {
+  #   enabled = var.enable_pod_security_policy
+  # }
+
+  
 
 }
 /******************************************
