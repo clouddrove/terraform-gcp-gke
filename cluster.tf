@@ -140,12 +140,12 @@ resource "google_container_cluster" "primary" {
   enable_tpu                  = var.enable_tpu
   enable_intranode_visibility = var.enable_intranode_visibility
 
-  dynamic "pod_security_policy_config" {
-    for_each = var.enable_pod_security_policy ? [var.enable_pod_security_policy] : []
-    content {
-      enabled = pod_security_policy_config.value
-    }
-  }
+  # dynamic "pod_security_policy_config" {
+  #   for_each = var.enable_pod_security_policy ? [var.enable_pod_security_policy] : []
+  #   content {
+  #     enabled = pod_security_policy_config.value
+  #   }
+  # }
 
   dynamic "identity_service_config" {
     for_each = var.enable_identity_service ? [var.enable_identity_service] : []

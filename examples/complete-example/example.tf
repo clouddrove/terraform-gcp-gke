@@ -92,7 +92,7 @@ module "gke-dev-jetic-cluster" {
   remove_default_node_pool          = true
   disable_legacy_metadata_endpoints = true
   deletion_protection               = false
-  enable_pod_security_policy        = true
+ # enable_pod_security_policy        = true
   cluster_resource_labels = {
     env  = "test"
     team = "platform"
