@@ -767,11 +767,11 @@ variable "cloudrun_load_balancer_type" {
   default     = ""
 }
 
-# variable "enable_pod_security_policy" {
-#   type        = bool
-#   description = "enabled - Enable the PodSecurityPolicy controller for this cluster. If enabled, pods must be valid under a PodSecurityPolicy to be created. Pod Security Policy was removed from GKE clusters with version >= 1.25.0."
-#   default     = false
-# }
+variable "enable_pod_security_policy" {
+  type        = bool
+  description = "enabled - Enable the PodSecurityPolicy controller for this cluster. If enabled, pods must be valid under a PodSecurityPolicy to be created. Pod Security Policy was removed from GKE clusters with version >= 1.25.0."
+  default     = false
+}
 
 variable "sandbox_enabled" {
   type        = bool
