@@ -623,7 +623,7 @@ resource "google_container_node_pool" "pools" {
       local.node_pools_metadata["all"],
       local.node_pools_metadata[each.value["name"]],
       {
-        "disable-legacy-endpoints" = var.disable_legacy_metadata_endpoints
+        "disable-legacy-endpoints" = tostring(var.disable_legacy_metadata_endpoints)
       },
     )
     dynamic "taint" {
