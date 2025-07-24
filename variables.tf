@@ -823,3 +823,15 @@ variable "master_authorized_networks_config" {
     cidr_blocks = []
   }
 }
+
+variable "cluster_network_policy" {
+  type = object({
+    enabled  = bool
+    provider = string
+  })
+
+  default = {
+    enabled  = true
+    provider = "CALICO"
+  }
+}

@@ -17,7 +17,7 @@ resource "google_container_cluster" "primary" {
   deletion_protection = var.deletion_protection
 
   dynamic "network_policy" {
-    for_each = local.cluster_network_policy
+    for_each = [var.cluster_network_policy]
 
     content {
       enabled  = network_policy.value.enabled
