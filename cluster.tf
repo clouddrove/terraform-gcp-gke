@@ -629,7 +629,7 @@ resource "google_container_node_pool" "pools" {
       local.node_pools_metadata["all"],
       local.node_pools_metadata[each.value["name"]],
       {
-        "disable-legacy-endpoints" = tostring(var.disable_legacy_metadata_endpoints)
+        "disable-legacy-endpoints" = "true"
       },
     )
 
@@ -875,7 +875,8 @@ resource "google_container_node_pool" "windows_pools" {
       local.node_pools_metadata["all"],
       local.node_pools_metadata[each.value["name"]],
       {
-        "disable-legacy-endpoints" = tostring(var.disable_legacy_metadata_endpoints)
+        "disable-legacy-endpoints" = "true"
+        #"disable-legacy-endpoints" =     # tostring(var.disable_legacy_metadata_endpoints)
       },
     )
     workload_metadata_config {
