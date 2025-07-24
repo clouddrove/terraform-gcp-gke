@@ -5,10 +5,10 @@
 resource "google_container_cluster" "primary" {
   provider = google-beta
 
-  name        = var.name
-  description = var.description
-  project     = var.project_id
-  #resource_labels = var.cluster_resource_labels
+  name            = var.name
+  description     = var.description
+  project         = var.project_id
+  resource_labels = var.cluster_resource_labels
 
   location            = local.location
   node_locations      = local.node_locations
@@ -500,7 +500,7 @@ resource "google_container_cluster" "primary" {
   #   enabled = var.enable_pod_security_policy
   # }
 
-  
+
 
 }
 /******************************************
