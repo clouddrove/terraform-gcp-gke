@@ -624,19 +624,16 @@ resource "google_container_node_pool" "pools" {
       local.node_pools_resource_labels[each.value["name"]],
     )
     metadata = merge(
-      # {
-      #   "disable-legacy-endpoints" = "true"
-      # },
       lookup(lookup(local.node_pools_metadata, "default_values", {}), "cluster_name", true) ? { "cluster_name" = var.name } : {},
       lookup(lookup(local.node_pools_metadata, "default_values", {}), "node_pool", true) ? { "node_pool" = each.value["name"] } : {},
       local.node_pools_metadata["all"],
       local.node_pools_metadata[each.value["name"]],
       {
         "disable-legacy-endpoints" = "true"
-      }
+      },
     )
     workload_metadata_config {
-      mode = "GKE_METADATA"
+      mode = "GKE_METADATA" # or "SECURE"
     }
 
     dynamic "taint" {
