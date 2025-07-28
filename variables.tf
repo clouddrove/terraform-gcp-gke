@@ -174,16 +174,29 @@ variable "node_pools_resource_labels" {
   }
 }
 
+# variable "node_pools_metadata" {
+#   type        = map(map(string))
+#   description = "Map of maps containing node metadata by node-pool name"
+
+#   # Default is being set in variables_defaults.tf
+#   default = {
+#     all               = {"disable-legacy-endpoints" = "true"}
+#     default-node-pool = {}
+#   }
+# }
+
 variable "node_pools_metadata" {
   type        = map(map(string))
   description = "Map of maps containing node metadata by node-pool name"
 
-  # Default is being set in variables_defaults.tf
   default = {
-    all               = {}
+    all = {
+      disable-legacy-endpoints = "true"
+    }
     default-node-pool = {}
   }
 }
+
 
 variable "node_pools_linux_node_configs_sysctls" {
   type        = map(map(string))
