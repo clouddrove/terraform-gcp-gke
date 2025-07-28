@@ -29,7 +29,7 @@ locals {
   )
 
   node_pools_metadata = merge(
-    { all = {} },
+    { all = { "disable-legacy-endpoints" = "true" } },
     { default-node-pool = {} },
     zipmap(
       [for node_pool in var.node_pools : node_pool["name"]],
