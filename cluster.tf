@@ -628,9 +628,9 @@ resource "google_container_node_pool" "pools" {
       lookup(lookup(local.node_pools_metadata, "default_values", {}), "node_pool", true) ? { "node_pool" = each.value["name"] } : {},
       local.node_pools_metadata["all"],
       local.node_pools_metadata[each.value["name"]],
-      {
-        "disable-legacy-endpoints" = "true"
-      },
+      # {
+      #   "disable-legacy-endpoints" = "true"
+      # },
     )
 
     workload_metadata_config {
