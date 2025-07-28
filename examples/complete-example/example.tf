@@ -156,9 +156,8 @@ module "gke-dev-jetic-cluster" {
   ]
 
   node_pools_labels = {
-    all = {
-      disable-legacy-endpoints = "true"
-    }
+    all = {}
+    
 
     default-node-pool = {
       default-node-pool = true
@@ -166,7 +165,9 @@ module "gke-dev-jetic-cluster" {
   }
 
   node_pools_metadata = {
-    all = {}
+    all = {
+       disable-legacy-endpoints = "true"
+    }
 
     default-node-pool = {
       node-pool-metadata-custom-value = "my-node-pool"
