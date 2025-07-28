@@ -634,7 +634,7 @@ resource "google_container_node_pool" "pools" {
     )
 
     workload_metadata_config {
-      mode = "GKE_METADATA"
+      mode = "SECURE"
     }
 
     dynamic "taint" {
