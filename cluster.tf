@@ -370,6 +370,10 @@ resource "google_container_cluster" "primary" {
       image_type       = lookup(var.node_pools[0], "image_type", "COS_CONTAINERD")
       machine_type     = lookup(var.node_pools[0], "machine_type", "e2-medium")
       min_cpu_platform = lookup(var.node_pools[0], "min_cpu_platform", "")
+
+      metadata = {
+        disable-legacy-endpoints = "true"
+      }
       dynamic "gcfs_config" {
         for_each = lookup(var.node_pools[0], "enable_gcfs", false) ? [true] : []
         content {
@@ -395,21 +399,21 @@ resource "google_container_cluster" "primary" {
 
       logging_variant = lookup(var.node_pools[0], "logging_variant", "DEFAULT")
 
-      dynamic "workload_metadata_config" {
-        for_each = local.cluster_node_metadata_config
+      # dynamic "workload_metadata_config" {
+      #   for_each = local.cluster_node_metadata_config
 
-        content {
-          mode = lookup(each.value, "node_metadata", workload_metadata_config.value.mode)
-        }
-      }
-
-      # workload_metadata_config {
-      #   mode = "GKE_METADATA"
+      #   content {
+      #     mode = lookup(each.value, "node_metadata", workload_metadata_config.value.mode)
+      #   }
       # }
 
+      workload_metadata_config {
+        mode = "GKE_METADATA_SERVER" # or "SECURE"
+      }
 
 
-      metadata = local.node_pools_metadata["all"]
+
+      # metadata = local.node_pools_metadata["all"]
 
       dynamic "sandbox_config" {
         for_each = tobool((lookup(var.node_pools[0], "sandbox_enabled", var.sandbox_enabled))) ? ["gvisor"] : []
