@@ -601,7 +601,7 @@ resource "google_container_node_pool" "pools" {
     image_type       = lookup(each.value, "image_type", "COS_CONTAINERD")
     machine_type     = lookup(each.value, "machine_type", "e2-medium")
     min_cpu_platform = lookup(each.value, "min_cpu_platform", "")
-    
+
     metadata = {
       disable-legacy-endpoints = "true"
     }
