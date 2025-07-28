@@ -624,24 +624,16 @@ resource "google_container_node_pool" "pools" {
       local.node_pools_resource_labels[each.value["name"]],
     )
     metadata = merge(
+      lookup(lookup(local.node_pools_metadata, "default_values", {}), "cluster_name", true) ? { "cluster_name" = var.name } : {},
+      lookup(lookup(local.node_pools_metadata, "default_values", {}), "node_pool", true) ? { "node_pool" = each.value["name"] } : {},
       local.node_pools_metadata["all"],
       local.node_pools_metadata[each.value["name"]],
       {
-        disable-legacy-endpoints = "true"
-      }
+        "disable-legacy-endpoints" = "true"
+      },
     )
-
-    # metadata = merge(
-    #   lookup(lookup(local.node_pools_metadata, "default_values", {}), "cluster_name", true) ? { "cluster_name" = var.name } : {},
-    #   lookup(lookup(local.node_pools_metadata, "default_values", {}), "node_pool", true) ? { "node_pool" = each.value["name"] } : {},
-    #   local.node_pools_metadata["all"],
-    #   local.node_pools_metadata[each.value["name"]],
-    #   {
-    #     "disable-legacy-endpoints" = "true"
-    #   },
-    # )
     workload_metadata_config {
-      mode = "GKE_METADATA_SERVER" # or "SECURE"
+      mode = "GKE_METADATA" # or "SECURE"
     }
 
     dynamic "taint" {
@@ -739,19 +731,6 @@ resource "google_container_node_pool" "pools" {
       }
     }
 
-    dynamic "linux_node_config" {
-      for_each = length(merge(
-        local.node_pools_linux_node_configs_sysctls["all"],
-        local.node_pools_linux_node_configs_sysctls[each.value["name"]]
-      )) != 0 ? [1] : []
-
-      content {
-        sysctls = merge(
-          local.node_pools_linux_node_configs_sysctls["all"],
-          local.node_pools_linux_node_configs_sysctls[each.value["name"]]
-        )
-      }
-    }
 
     boot_disk_kms_key = lookup(each.value, "boot_disk_kms_key", "")
 
@@ -760,6 +739,7 @@ resource "google_container_node_pool" "pools" {
       enable_integrity_monitoring = lookup(each.value, "enable_integrity_monitoring", true)
     }
   }
+
   lifecycle {
     ignore_changes = [initial_node_count]
 
@@ -770,7 +750,185 @@ resource "google_container_node_pool" "pools" {
     update = lookup(var.timeouts, "update", "45m")
     delete = lookup(var.timeouts, "delete", "45m")
   }
+
+  depends_on = [google_container_node_pool.pools[0]]
 }
+
+
+#   node_config {
+#     image_type       = lookup(each.value, "image_type", "COS_CONTAINERD")
+#     machine_type     = lookup(each.value, "machine_type", "e2-medium")
+#     min_cpu_platform = lookup(each.value, "min_cpu_platform", "")
+#     dynamic "gcfs_config" {
+#       for_each = lookup(each.value, "enable_gcfs", false) ? [true] : []
+#       content {
+#         enabled = gcfs_config.value
+#       }
+#     }
+#     dynamic "gvnic" {
+#       for_each = lookup(each.value, "enable_gvnic", false) ? [true] : []
+#       content {
+#         enabled = gvnic.value
+#       }
+#     }
+#     labels = merge(
+#       lookup(lookup(local.node_pools_labels, "default_values", {}), "cluster_name", true) ? { "cluster_name" = var.name } : {},
+#       lookup(lookup(local.node_pools_labels, "default_values", {}), "node_pool", true) ? { "node_pool" = each.value["name"] } : {},
+#       local.node_pools_labels["all"],
+#       local.node_pools_labels[each.value["name"]],
+#     )
+#     resource_labels = merge(
+#       local.node_pools_resource_labels["all"],
+#       local.node_pools_resource_labels[each.value["name"]],
+#     )
+#     metadata = merge(
+#       local.node_pools_metadata["all"],
+#       local.node_pools_metadata[each.value["name"]],
+#       {
+#         disable-legacy-endpoints = "true"
+#       }
+#     )
+
+#     # metadata = merge(
+#     #   lookup(lookup(local.node_pools_metadata, "default_values", {}), "cluster_name", true) ? { "cluster_name" = var.name } : {},
+#     #   lookup(lookup(local.node_pools_metadata, "default_values", {}), "node_pool", true) ? { "node_pool" = each.value["name"] } : {},
+#     #   local.node_pools_metadata["all"],
+#     #   local.node_pools_metadata[each.value["name"]],
+#     #   {
+#     #     "disable-legacy-endpoints" = "true"
+#     #   },
+#     # )
+#     workload_metadata_config {
+#       mode = "GKE_METADATA_SERVER" # or "SECURE"
+#     }
+
+#     dynamic "taint" {
+#       for_each = concat(
+#         local.node_pools_taints["all"],
+#         local.node_pools_taints[each.value["name"]],
+#       )
+#       content {
+#         effect = taint.value.effect
+#         key    = taint.value.key
+#         value  = taint.value.value
+#       }
+#     }
+#     tags = concat(
+#       lookup(local.node_pools_tags, "default_values", [true, true])[0] ? [local.cluster_network_tag] : [],
+#       lookup(local.node_pools_tags, "default_values", [true, true])[1] ? ["${local.cluster_network_tag}-${each.value["name"]}"] : [],
+#       local.node_pools_tags["all"],
+#       local.node_pools_tags[each.value["name"]],
+#     )
+
+#     logging_variant = lookup(each.value, "logging_variant", "DEFAULT")
+
+#     local_ssd_count = lookup(each.value, "local_ssd_count", 0)
+#     disk_size_gb    = lookup(each.value, "disk_size_gb", 100)
+#     disk_type       = lookup(each.value, "disk_type", "pd-standard")
+
+#     dynamic "ephemeral_storage_config" {
+#       for_each = lookup(each.value, "local_ssd_ephemeral_count", 0) > 0 ? [each.value.local_ssd_ephemeral_count] : []
+#       content {
+#         local_ssd_count = ephemeral_storage_config.value
+#       }
+#     }
+
+#     dynamic "local_nvme_ssd_block_config" {
+#       for_each = lookup(each.value, "local_nvme_ssd_count", 0) > 0 ? [1] : []
+#       content {
+#         local_ssd_count = local_nvme_ssd_block_config.value
+#       }
+#     }
+
+#     service_account = lookup(
+#       each.value,
+#       "service_account",
+#       local.service_account,
+#     )
+#     preemptible = lookup(each.value, "preemptible", false)
+#     spot        = lookup(each.value, "spot", false)
+
+#     oauth_scopes = concat(
+#       local.node_pools_oauth_scopes["all"],
+#       local.node_pools_oauth_scopes[each.value["name"]],
+#     )
+
+#     dynamic "guest_accelerator" {
+#       for_each = lookup(each.value, "accelerator_count", 0) > 0 ? [1] : []
+#       content {
+#         type               = lookup(each.value, "accelerator_type", "")
+#         count              = lookup(each.value, "accelerator_count", 0)
+#         gpu_partition_size = lookup(each.value, "gpu_partition_size", null)
+
+#         dynamic "gpu_driver_installation_config" {
+#           for_each = lookup(each.value, "gpu_driver_version", "") != "" ? [1] : []
+#           content {
+#             gpu_driver_version = lookup(each.value, "gpu_driver_version", "")
+#           }
+#         }
+#       }
+#     }
+
+#     # dynamic "workload_metadata_config" {
+#     #   for_each = local.cluster_node_metadata_config
+
+#     #   content {
+#     #     mode = lookup(each.value, "node_metadata", workload_metadata_config.value.mode)
+#     #   }
+#     # }
+
+#     dynamic "sandbox_config" {
+#       for_each = tobool((lookup(each.value, "sandbox_enabled", var.sandbox_enabled))) ? ["gvisor"] : []
+#       content {
+#         sandbox_type = sandbox_config.value
+#       }
+#     }
+
+#     dynamic "kubelet_config" {
+#       for_each = length(setintersection(
+#         keys(each.value),
+#         ["cpu_manager_policy", "cpu_cfs_quota", "cpu_cfs_quota_period"]
+#       )) != 0 ? [1] : []
+
+#       content {
+#         cpu_manager_policy   = lookup(each.value, "cpu_manager_policy", "static")
+#         cpu_cfs_quota        = lookup(each.value, "cpu_cfs_quota", null)
+#         cpu_cfs_quota_period = lookup(each.value, "cpu_cfs_quota_period", null)
+#       }
+#     }
+
+#     dynamic "linux_node_config" {
+#       for_each = length(merge(
+#         local.node_pools_linux_node_configs_sysctls["all"],
+#         local.node_pools_linux_node_configs_sysctls[each.value["name"]]
+#       )) != 0 ? [1] : []
+
+#       content {
+#         sysctls = merge(
+#           local.node_pools_linux_node_configs_sysctls["all"],
+#           local.node_pools_linux_node_configs_sysctls[each.value["name"]]
+#         )
+#       }
+#     }
+
+#     boot_disk_kms_key = lookup(each.value, "boot_disk_kms_key", "")
+
+#     shielded_instance_config {
+#       enable_secure_boot          = lookup(each.value, "enable_secure_boot", false)
+#       enable_integrity_monitoring = lookup(each.value, "enable_integrity_monitoring", true)
+#     }
+#   }
+#   lifecycle {
+#     ignore_changes = [initial_node_count]
+
+#   }
+
+#   timeouts {
+#     create = lookup(var.timeouts, "create", "45m")
+#     update = lookup(var.timeouts, "update", "45m")
+#     delete = lookup(var.timeouts, "delete", "45m")
+#   }
+# }
 
 resource "google_container_node_pool" "windows_pools" {
   provider = google-beta
