@@ -624,7 +624,7 @@ resource "google_container_node_pool" "pools" {
       local.node_pools_resource_labels[each.value["name"]],
     )
     metadata = merge(
-       {
+      {
         "disable-legacy-endpoints" = "true"
       },
       lookup(lookup(local.node_pools_metadata, "default_values", {}), "cluster_name", true) ? { "cluster_name" = var.name } : {},
