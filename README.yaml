@@ -35,7 +35,7 @@ prerequesties:
 providers:
   - name: gcp
     url: https://cloud.google.com/
-    version: ">= 6.45.0"
+    version: "~> 6.45.0"
 
 #  description of this project
 description: |-
