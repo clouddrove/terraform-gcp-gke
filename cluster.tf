@@ -627,7 +627,7 @@ resource "google_container_node_pool" "pools" {
       local.node_pools_metadata["all"],
       local.node_pools_metadata[each.value["name"]],
       {
-       disable-legacy-endpoints = "true"
+        disable-legacy-endpoints = "true"
       }
     )
 
