@@ -94,12 +94,5 @@ locals {
     var.node_pools_linux_node_configs_sysctls
   )
 
-  # Cluster-level workload metadata config
-  cluster_node_metadata_config = {
-    default = {
-      node_metadata = "GKE_METADATA"
-    }
-  }
-
   enable_monitoring_config = var.monitoring_enable_managed_prometheus || var.monitoring_enable_observability_metrics
 }

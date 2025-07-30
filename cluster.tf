@@ -383,13 +383,10 @@ resource "google_container_cluster" "primary" {
 
       logging_variant = lookup(var.node_pools[0], "logging_variant", "DEFAULT")
 
-      dynamic "workload_metadata_config" {
-        for_each = local.cluster_node_metadata_config
-
-        content {
-          mode = lookup(each.value, "node_metadata", "GKE_METADATA")
-        }
+      workload_metadata_config {
+        mode = lookup(local.cluster_node_metadata_config.default, "node_metadata", "GKE_METADATA")
       }
+
 
       metadata = local.node_pools_metadata["all"]
 
