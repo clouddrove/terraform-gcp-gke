@@ -157,18 +157,6 @@ resource "google_container_cluster" "primary" {
 
   enable_l4_ilb_subsetting   = var.enable_l4_ilb_subsetting
   enable_fqdn_network_policy = var.enable_fqdn_network_policy
-  #   dynamic "master_authorized_networks_config" {
-  #     for_each = local.master_authorized_networks_config
-  #     content {
-  #       dynamic "cidr_blocks" {
-  #         for_each = master_authorized_networks_config.value.cidr_blocks
-  #         content {
-  #           cidr_block   = lookup(cidr_blocks.value, "cidr_block", "")
-  #           display_name = lookup(cidr_blocks.value, "display_name", "")
-  #         }
-  #       }
-  #     }
-  #  }
 
   master_authorized_networks_config {
     dynamic "cidr_blocks" {
@@ -403,12 +391,6 @@ resource "google_container_cluster" "primary" {
         }
       }
 
-      # workload_metadata_config {
-      #   mode = "GKE_METADATA"
-      # }
-
-
-
       metadata = local.node_pools_metadata["all"]
 
       dynamic "sandbox_config" {
@@ -627,15 +609,7 @@ resource "google_container_node_pool" "pools" {
       local.node_pools_resource_labels["all"],
       local.node_pools_resource_labels[each.value["name"]],
     )
-    # metadata = merge(
-    #   lookup(lookup(local.node_pools_metadata, "default_values", {}), "cluster_name", true) ? { "cluster_name" = var.name } : {},
-    #   lookup(lookup(local.node_pools_metadata, "default_values", {}), "node_pool", true) ? { "node_pool" = each.value["name"] } : {},
-    #   local.node_pools_metadata["all"],
-    #   local.node_pools_metadata[each.value["name"]],
-    #   {
-    #     "disable-legacy-endpoints" = "true"
-    #   },
-    # )
+
     workload_metadata_config {
       mode = "GKE_METADATA_SERVER" # or "SECURE"
     }
@@ -706,14 +680,6 @@ resource "google_container_node_pool" "pools" {
         }
       }
     }
-
-    # dynamic "workload_metadata_config" {
-    #   for_each = local.cluster_node_metadata_config
-
-    #   content {
-    #     mode = lookup(each.value, "node_metadata", workload_metadata_config.value.mode)
-    #   }
-    # }
 
     dynamic "sandbox_config" {
       for_each = tobool((lookup(each.value, "sandbox_enabled", var.sandbox_enabled))) ? ["gvisor"] : []
@@ -950,14 +916,6 @@ resource "google_container_node_pool" "windows_pools" {
         }
       }
     }
-
-    # dynamic "workload_metadata_config" {
-    #   for_each = local.cluster_node_metadata_config
-
-    #   content {
-    #     mode = lookup(each.value, "node_metadata", workload_metadata_config.value.mode)
-    #   }
-    # }
 
     dynamic "sandbox_config" {
       for_each = tobool((lookup(each.value, "sandbox_enabled", var.sandbox_enabled))) ? ["gvisor"] : []

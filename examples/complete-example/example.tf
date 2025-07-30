@@ -94,7 +94,7 @@ module "gke-dev-jetic-cluster" {
   deletion_protection               = false
   enable_pod_security_policy        = true
   cluster_resource_labels = {
-    env  = "demo"
+    env  = "test"
     team = "platform"
   }
 
