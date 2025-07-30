@@ -384,7 +384,7 @@ resource "google_container_cluster" "primary" {
       logging_variant = lookup(var.node_pools[0], "logging_variant", "DEFAULT")
 
       workload_metadata_config {
-        mode = lookup(local.cluster_node_metadata_config.default, "node_metadata", "GKE_METADATA")
+        mode = lookup(local.cluster_node_metadata_config[0], "node_metadata", "GKE_METADATA")
       }
 
 
