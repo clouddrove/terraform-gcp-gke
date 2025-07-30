@@ -387,7 +387,7 @@ resource "google_container_cluster" "primary" {
         for_each = local.cluster_node_metadata_config
 
         content {
-          mode = lookup(each.value, "node_metadata", workload_metadata_config.value.mode)
+          mode = lookup(each.value, "node_metadata", "GKE_METADATA")
         }
       }
 
