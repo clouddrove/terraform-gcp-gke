@@ -143,7 +143,7 @@ resource "google_container_cluster" "primary" {
   dynamic "pod_security_policy_config" {
     for_each = var.enable_pod_security_policy ? [var.enable_pod_security_policy] : []
     content {
-      enabled = each.value
+      enabled = var.enable_pod_security_policy
     }
   }
 
