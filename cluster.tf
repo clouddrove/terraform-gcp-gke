@@ -17,7 +17,7 @@ resource "google_container_cluster" "primary" {
   deletion_protection = var.deletion_protection
 
   dynamic "network_policy" {
-    for_each = local.cluster_network_policy
+    for_each = [var.cluster_network_policy]
 
     content {
       enabled  = network_policy.value.enabled
@@ -80,7 +80,7 @@ resource "google_container_cluster" "primary" {
   }
   monitoring_service = local.cluster_telemetry_type_is_set || local.logmon_config_is_set ? null : var.monitoring_service
   dynamic "monitoring_config" {
-    for_each = local.cluster_telemetry_type_is_set || local.logmon_config_is_set ? [1] : []
+    for_each = local.enable_monitoring_config ? [1] : []
     content {
       enable_components = var.monitoring_enabled_components
       managed_prometheus {
@@ -88,10 +88,11 @@ resource "google_container_cluster" "primary" {
       }
       advanced_datapath_observability_config {
         enable_metrics = var.monitoring_enable_observability_metrics
-        relay_mode     = var.monitoring_observability_metrics_relay_mode
+        enable_relay   = var.monitoring_enable_observability_metrics_relay
       }
     }
   }
+
   cluster_autoscaling {
     enabled = var.cluster_autoscaling.enabled
     dynamic "auto_provisioning_defaults" {
@@ -142,9 +143,10 @@ resource "google_container_cluster" "primary" {
   dynamic "pod_security_policy_config" {
     for_each = var.enable_pod_security_policy ? [var.enable_pod_security_policy] : []
     content {
-      enabled = pod_security_policy_config.value
+      enabled = var.enable_pod_security_policy
     }
   }
+
 
   dynamic "identity_service_config" {
     for_each = var.enable_identity_service ? [var.enable_identity_service] : []
@@ -155,18 +157,17 @@ resource "google_container_cluster" "primary" {
 
   enable_l4_ilb_subsetting   = var.enable_l4_ilb_subsetting
   enable_fqdn_network_policy = var.enable_fqdn_network_policy
-  dynamic "master_authorized_networks_config" {
-    for_each = local.master_authorized_networks_config
-    content {
-      dynamic "cidr_blocks" {
-        for_each = master_authorized_networks_config.value.cidr_blocks
-        content {
-          cidr_block   = lookup(cidr_blocks.value, "cidr_block", "")
-          display_name = lookup(cidr_blocks.value, "display_name", "")
-        }
+
+  master_authorized_networks_config {
+    dynamic "cidr_blocks" {
+      for_each = var.master_authorized_networks_config.cidr_blocks
+      content {
+        cidr_block   = cidr_blocks.value.cidr_block
+        display_name = cidr_blocks.value.display_name
       }
     }
   }
+
 
   dynamic "node_pool_auto_config" {
     for_each = var.cluster_autoscaling.enabled && length(var.network_tags) > 0 ? [1] : []
@@ -382,13 +383,10 @@ resource "google_container_cluster" "primary" {
 
       logging_variant = lookup(var.node_pools[0], "logging_variant", "DEFAULT")
 
-      dynamic "workload_metadata_config" {
-        for_each = local.cluster_node_metadata_config
-
-        content {
-          mode = workload_metadata_config.value.mode
-        }
+      workload_metadata_config {
+        mode = lookup(local.cluster_node_metadata_config[0], "node_metadata", "GKE_METADATA")
       }
+
 
       metadata = local.node_pools_metadata["all"]
 
@@ -494,7 +492,10 @@ resource "google_container_cluster" "primary" {
   }
 
   depends_on = [google_project_iam_member.service_agent]
+
 }
+
+
 /******************************************
   Create Container Cluster node pools
  *****************************************/
@@ -579,6 +580,10 @@ resource "google_container_node_pool" "pools" {
     image_type       = lookup(each.value, "image_type", "COS_CONTAINERD")
     machine_type     = lookup(each.value, "machine_type", "e2-medium")
     min_cpu_platform = lookup(each.value, "min_cpu_platform", "")
+
+    metadata = {
+      disable-legacy-endpoints = true
+    }
     dynamic "gcfs_config" {
       for_each = lookup(each.value, "enable_gcfs", false) ? [true] : []
       content {
@@ -601,15 +606,11 @@ resource "google_container_node_pool" "pools" {
       local.node_pools_resource_labels["all"],
       local.node_pools_resource_labels[each.value["name"]],
     )
-    metadata = merge(
-      lookup(lookup(local.node_pools_metadata, "default_values", {}), "cluster_name", true) ? { "cluster_name" = var.name } : {},
-      lookup(lookup(local.node_pools_metadata, "default_values", {}), "node_pool", true) ? { "node_pool" = each.value["name"] } : {},
-      local.node_pools_metadata["all"],
-      local.node_pools_metadata[each.value["name"]],
-      {
-        "disable-legacy-endpoints" = var.disable_legacy_metadata_endpoints
-      },
-    )
+
+    workload_metadata_config {
+      mode = "GKE_METADATA_SERVER" # or "SECURE"
+    }
+
     dynamic "taint" {
       for_each = concat(
         local.node_pools_taints["all"],
@@ -677,14 +678,6 @@ resource "google_container_node_pool" "pools" {
       }
     }
 
-    dynamic "workload_metadata_config" {
-      for_each = local.cluster_node_metadata_config
-
-      content {
-        mode = lookup(each.value, "node_metadata", workload_metadata_config.value.mode)
-      }
-    }
-
     dynamic "sandbox_config" {
       for_each = tobool((lookup(each.value, "sandbox_enabled", var.sandbox_enabled))) ? ["gvisor"] : []
       content {
@@ -726,7 +719,6 @@ resource "google_container_node_pool" "pools" {
       enable_integrity_monitoring = lookup(each.value, "enable_integrity_monitoring", true)
     }
   }
-
   lifecycle {
     ignore_changes = [initial_node_count]
 
@@ -737,8 +729,8 @@ resource "google_container_node_pool" "pools" {
     update = lookup(var.timeouts, "update", "45m")
     delete = lookup(var.timeouts, "delete", "45m")
   }
-
 }
+
 resource "google_container_node_pool" "windows_pools" {
   provider = google-beta
   for_each = local.windows_node_pools
@@ -848,9 +840,13 @@ resource "google_container_node_pool" "windows_pools" {
       local.node_pools_metadata["all"],
       local.node_pools_metadata[each.value["name"]],
       {
-        "disable-legacy-endpoints" = var.disable_legacy_metadata_endpoints
+        "disable-legacy-endpoints" = "true"
       },
     )
+    workload_metadata_config {
+      mode = "GKE_METADATA" # or "SECURE"
+    }
+
     dynamic "taint" {
       for_each = concat(
         local.node_pools_taints["all"],
@@ -915,14 +911,6 @@ resource "google_container_node_pool" "windows_pools" {
             gpu_driver_version = lookup(each.value, "gpu_driver_version", "")
           }
         }
-      }
-    }
-
-    dynamic "workload_metadata_config" {
-      for_each = local.cluster_node_metadata_config
-
-      content {
-        mode = lookup(each.value, "node_metadata", workload_metadata_config.value.mode)
       }
     }
 

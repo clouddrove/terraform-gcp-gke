@@ -174,16 +174,29 @@ variable "node_pools_resource_labels" {
   }
 }
 
+# variable "node_pools_metadata" {
+#   type        = map(map(string))
+#   description = "Map of maps containing node metadata by node-pool name"
+
+#   # Default is being set in variables_defaults.tf
+#   default = {
+#     all               = {"disable-legacy-endpoints" = "true"}
+#     default-node-pool = {}
+#   }
+# }
+
 variable "node_pools_metadata" {
   type        = map(map(string))
   description = "Map of maps containing node metadata by node-pool name"
 
-  # Default is being set in variables_defaults.tf
   default = {
-    all               = {}
+    all = {
+      disable-legacy-endpoints = "true"
+    }
     default-node-pool = {}
   }
 }
+
 
 variable "node_pools_linux_node_configs_sysctls" {
   type        = map(map(string))
@@ -387,7 +400,9 @@ variable "cluster_ipv4_cidr" {
 variable "cluster_resource_labels" {
   type        = map(string)
   description = "The GCE resource labels (a map of key/value pairs) to be applied to the cluster"
-  default     = {}
+  default = {
+    environment = "dev"
+  }
 }
 
 
@@ -406,7 +421,7 @@ variable "enable_private_endpoint" {
 variable "enable_private_nodes" {
   type        = bool
   description = "(Beta) Whether nodes have internal IP addresses only"
-  default     = false
+  default     = true
 }
 
 variable "master_ipv4_cidr_block" {
@@ -534,13 +549,13 @@ variable "enable_fqdn_network_policy" {
 variable "security_posture_mode" {
   description = "Security posture mode.  Accepted values are `DISABLED` and `BASIC`. Defaults to `DISABLED`."
   type        = string
-  default     = "DISABLED"
+  default     = "STRICT"
 }
 
 variable "security_posture_vulnerability_mode" {
   description = "Security posture vulnerability mode.  Accepted values are `VULNERABILITY_DISABLED` and `VULNERABILITY_BASIC`. Defaults to `VULNERABILITY_DISABLED`."
   type        = string
-  default     = "VULNERABILITY_DISABLED"
+  default     = "VULNERABILITY_MODE_UNSPECIFIED"
 }
 
 variable "disable_default_snat" {
@@ -700,15 +715,12 @@ variable "monitoring_enable_observability_metrics" {
   default     = false
 }
 
-variable "monitoring_observability_metrics_relay_mode" {
-  type        = string
-  description = "Mode used to make advanced datapath metrics relay available."
-  default     = null
-  validation {
-    condition     = var.monitoring_observability_metrics_relay_mode == null ? true : contains(["DISABLED", "INTERNAL_VPC_LB", "EXTERNAL_LB"], var.monitoring_observability_metrics_relay_mode)
-    error_message = "The advanced datapath metrics relay value must be one of DISABLED, INTERNAL_VPC_LB, EXTERNAL_LB."
-  }
+variable "monitoring_enable_observability_metrics_relay" {
+  type        = bool
+  default     = false
+  description = "Whether to enable the relay for observability metrics"
 }
+
 
 variable "monitoring_enabled_components" {
   type        = list(string)
@@ -773,7 +785,7 @@ variable "cloudrun_load_balancer_type" {
 variable "enable_pod_security_policy" {
   type        = bool
   description = "enabled - Enable the PodSecurityPolicy controller for this cluster. If enabled, pods must be valid under a PodSecurityPolicy to be created. Pod Security Policy was removed from GKE clusters with version >= 1.25.0."
-  default     = false
+  default     = true
 }
 
 variable "sandbox_enabled" {
@@ -810,4 +822,29 @@ variable "fleet_project_grant_service_agent" {
   description = "(Optional) Grant the fleet project service identity the `roles/gkehub.serviceAgent` and `roles/gkehub.crossProjectServiceAgent` roles."
   type        = bool
   default     = false
+}
+
+variable "master_authorized_networks_config" {
+  description = "List of CIDR blocks for master authorized networks"
+  type = object({
+    cidr_blocks = list(object({
+      cidr_block   = string
+      display_name = string
+    }))
+  })
+  default = {
+    cidr_blocks = []
+  }
+}
+
+variable "cluster_network_policy" {
+  type = object({
+    enabled  = bool
+    provider = string
+  })
+
+  default = {
+    enabled  = true
+    provider = "CALICO"
+  }
 }
