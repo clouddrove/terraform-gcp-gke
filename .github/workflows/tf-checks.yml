@@ -9,6 +9,6 @@ jobs:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@2.0.0
     secrets: inherit
     with:
-      provider: gcp
+      provider: none
       enable_version_check: true
       working_directory: './examples/complete-example/'
